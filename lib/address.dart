@@ -85,15 +85,14 @@ class AddressPage extends StatelessWidget {
                       size: 200.0,
                       embeddedImage: AssetImage('assets/logo_social.png'),
                       version: QrVersions.auto,
-                      gapless: false,
-                    ),
+                     ),
                   Container(
                     margin: EdgeInsets.only(top: 20),
-                    child: Text(
+                    child:Obx(()=> Text(
                       addresController.address.value ?? '',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 25),
-                    ),
+                    )),
                   ),
                  GestureDetector(
                    onTap: (){

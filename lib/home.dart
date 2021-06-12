@@ -21,29 +21,39 @@ class Home extends StatelessWidget {
   PanelController controller = PanelController();
   final _formKey = GlobalKey<FormState>();
 
-  var _url='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC&use=V2';
+  var _url =
+      'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC&use=V2';
 
-  void launchUrl() async =>
-      await canLaunch(_url) ? await launch(_url) : throw 'Could not launch $_url';
-  showPopUp(context){
+  void launchUrl() async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
+
+  showPopUp(context) {
     Alert(
         context: context,
         style: AlertStyle(
-          descStyle: TextStyle(color: Color(0xff424f5c)),
-          titleStyle: TextStyle(fontSize: 30,color: Color(0xff424f5c))
-        ),
+            descStyle: TextStyle(color: Color(0xff424f5c)),
+            titleStyle: TextStyle(fontSize: 30, color: Color(0xff424f5c))),
         title: "Well done!",
         content: Column(
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 20),
-              child: Text("The transaction is being processed" ,style: TextStyle(color: Color(0xff424f5c),fontSize: 18),),
+              child: Text(
+                "The transaction is being processed",
+                style: TextStyle(color: Color(0xff424f5c), fontSize: 18),
+              ),
             ),
             Container(
               margin: EdgeInsets.only(top: 15),
-              child: Text("Please wait.The average transaction time is 120 minutes",style: TextStyle(fontWeight: FontWeight.w300,color: Color(0xff424f5c),fontSize: 16),),
+              child: Text(
+                "Please wait.The average transaction time is 120 minutes",
+                style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    color: Color(0xff424f5c),
+                    fontSize: 16),
+              ),
             ),
-
           ],
         ),
         buttons: [
@@ -179,10 +189,11 @@ class Home extends StatelessWidget {
                                     ),
                                     RaisedButton(
                                       onPressed: () {
-
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => AddressPage()),
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddressPage()),
                                         );
                                       },
                                       child: Text(
@@ -215,7 +226,7 @@ class Home extends StatelessWidget {
                                     size: 30,
                                     color: Colors.white,
                                   ),
-                                  onTap: (){
+                                  onTap: () {
                                     launchUrl();
                                   },
                                 ),
@@ -256,86 +267,93 @@ class Home extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 30, bottom: 10),
-                          child: Text(
-                            "Recent Transactions",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w300),
-                          ),
-                        ),
+                        GetBuilder<BalanceWallet>(
+                            builder: (_dx) => Container(
+                                  margin: EdgeInsets.only(top: 30, bottom: 10),
+                                  child: Text(
+                                    _dx.transactions.length == 0
+                                        ? "No recent ransactions"
+                                        : "Recent transactions",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                )),
                         Expanded(
                             child: GetBuilder<BalanceWallet>(
                           builder: (_dx) => ListView.builder(
                               itemCount: _dx.transactions.length,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
-                                  onTap: (){
-                                    print( _dx.transactions[index]);
+                                  onTap: () {
+                                    print(_dx.transactions[index]);
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(bottom: 30),
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Expanded(
                                           child: Row(
                                             children: [
                                               Container(
                                                 child: _dx.transactions[index]
-                                                    .type ==
-                                                    "up"
+                                                            .type ==
+                                                        "up"
                                                     ? Icon(
-                                                  Icons.arrow_circle_up,
-                                                  color: Colors.greenAccent,
-                                                )
+                                                        Icons.arrow_circle_up,
+                                                        color:
+                                                            Colors.greenAccent,
+                                                      )
                                                     : Icon(
-                                                  Icons.arrow_circle_down,
-                                                  color: Colors.redAccent,
-                                                ),
-                                                margin: EdgeInsets.only(right: 5),
+                                                        Icons.arrow_circle_down,
+                                                        color: Colors.redAccent,
+                                                      ),
+                                                margin:
+                                                    EdgeInsets.only(right: 5),
                                               ),
                                               Expanded(
                                                   child: Column(
-                                                    mainAxisAlignment:
+                                                mainAxisAlignment:
                                                     MainAxisAlignment.start,
-                                                    crossAxisAlignment:
+                                                crossAxisAlignment:
                                                     CrossAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                        child: Text(
-                                                          "${_dx.transactions[index].from}",
-                                                          overflow:
+                                                children: [
+                                                  Container(
+                                                    child: Text(
+                                                      "${_dx.transactions[index].from}",
+                                                      overflow:
                                                           TextOverflow.ellipsis,
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
+                                                      style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
                                                               FontWeight.bold,
-                                                              color:
-                                                              Color(0xff424f5c)),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              "${_dx.convertTimeStampToHumanDate(int.parse(_dx.transactions[index].timeStamp))}",
-                                                              style: TextStyle(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                  FontWeight.bold,
-                                                                  color: Colors.grey
-                                                                      .withOpacity(
+                                                          color: Color(
+                                                              0xff424f5c)),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          "${_dx.convertTimeStampToHumanDate(int.parse(_dx.transactions[index].timeStamp))}",
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors.grey
+                                                                  .withOpacity(
                                                                       0.7)),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        margin:
+                                                        )
+                                                      ],
+                                                    ),
+                                                    margin:
                                                         EdgeInsets.only(top: 5),
-                                                      )
-                                                    ],
-                                                  ))
+                                                  )
+                                                ],
+                                              ))
                                             ],
                                           ),
                                           flex: 6,
@@ -350,19 +368,19 @@ class Home extends StatelessWidget {
                                                     style: TextStyle(
                                                         fontSize: 15,
                                                         fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Color(0xff424f5c)),
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Color(0xff424f5c)),
                                                   )
                                                 ],
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                                    MainAxisAlignment.end,
                                               ),
                                             ))
                                       ],
                                     ),
                                   ),
                                 );
-
                               }),
                         ))
                       ],
@@ -372,37 +390,127 @@ class Home extends StatelessWidget {
           ),
           panel: Container(
             margin: EdgeInsets.only(top: 20, left: 20, right: 20),
-            child: Obx(()=>Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 20, bottom: 30),
-                  child:Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Available",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                     Expanded(child:  Text(
-                       " ${walletController.bsocialBalance.value}",
-                       style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
-                     ))
-                    ],
-                  ),
-                ),
-                Form(
-                  key: _formKey,
-
-                  child: Column(
-                    children: [
-                      Stack(
+            child: Obx(() => Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20, bottom: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text(
+                            "Available",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Expanded(
+                              child: Text(
+                            " ${walletController.bsocialBalance.value}",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ))
+                        ],
+                      ),
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(bottom: 20),
+                                child: TextFormField(
+                                  controller: walletControlerText,
+                                  decoration: new InputDecoration(
+                                    labelText: "Enter wallet address",
+                                    fillColor: Colors.white,
+                                    border: new OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(25.0),
+                                      borderSide: new BorderSide(),
+                                    ),
+                                    //fillColor: Colors.green
+                                  ),
+                                  validator: (val) {
+                                    if (val.length == 0) {
+                                      return "Email cannot be empty";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: new TextStyle(
+                                    fontFamily: "Poppins",
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 5,
+                                top: 5,
+                                child: walletController
+                                            .valuePasteWallet.value.length ==
+                                        0
+                                    ? InkWell(
+                                        onTap: () async {
+                                          FlutterClipboard.paste()
+                                              .then((value) {
+                                            walletControlerText.text = value;
+
+                                            walletController
+                                                .valuePasteWallet.value = value;
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(30),
+                                                  bottomRight:
+                                                      Radius.circular(30))),
+                                          padding: EdgeInsets.all(10),
+                                          child: Icon(
+                                            Icons.paste,
+                                            size: 25,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () async {
+                                          FlutterClipboard.paste()
+                                              .then((value) {
+                                            walletControlerText.text = "";
+
+                                            walletController
+                                                .valuePasteWallet.value = "";
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(30),
+                                                  bottomRight:
+                                                      Radius.circular(30))),
+                                          padding: EdgeInsets.all(10),
+                                          child: Icon(
+                                            Icons.cancel_outlined,
+                                            size: 25,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
                           Container(
                             margin: EdgeInsets.only(bottom: 20),
-                            child:TextFormField(
-                              controller: walletControlerText,
+                            child: TextFormField(
+                              inputFormatters: [
+                                WhitelistingTextInputFormatter.digitsOnly
+                              ],
+                              keyboardType: TextInputType.number,
                               decoration: new InputDecoration(
-                                labelText: "Enter wallet address",
+                                labelText: "Enter ammount",
                                 fillColor: Colors.white,
                                 border: new OutlineInputBorder(
                                   borderRadius: new BorderRadius.circular(25.0),
@@ -410,130 +518,51 @@ class Home extends StatelessWidget {
                                 ),
                                 //fillColor: Colors.green
                               ),
-                              validator: (val) {
-
-
-                                if (val.length == 0) {
-                                  return "Email cannot be empty";
-                                } else {
-                                  return null;
-                                }
+                              onChanged: (val) {
+                                walletController.canTransfer.value =
+                                    double.parse(val);
                               },
-                              keyboardType: TextInputType.emailAddress,
                               style: new TextStyle(
                                 fontFamily: "Poppins",
                               ),
                             ),
                           ),
-                          Positioned(
-                            right: 5,
-                            top: 5,
-                            child: walletController.valuePasteWallet.value.length == 0
-                                ? InkWell(
-                              onTap: () async {
-                                FlutterClipboard.paste().then((value) {
-                                  walletControlerText.text = value;
-
-                                  walletController.valuePasteWallet.value =
-                                      value;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(30),
-                                        bottomRight: Radius.circular(30))),
-                                padding: EdgeInsets.all(10),
-                                child: Icon(
-                                  Icons.paste,
-                                  size: 25,
-                                  color: Colors.grey,
-                                ),
+                          Container(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(10.0),
                               ),
-                            )
-                                : InkWell(
-                              onTap: () async {
-                                FlutterClipboard.paste().then((value) {
-                                  walletControlerText.text = "";
-
-                                  walletController.valuePasteWallet.value =
-                                  "";
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(30),
-                                        bottomRight: Radius.circular(30))),
-                                padding: EdgeInsets.all(10),
-                                child: Icon(
-                                  Icons.cancel_outlined,
-                                  size: 25,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 20),
-                        child: TextFormField(
-                          inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                          keyboardType: TextInputType.number,
-                          decoration: new InputDecoration(
-                            labelText: "Enter ammount",
-                            fillColor: Colors.white,
-                            border: new OutlineInputBorder(
-                              borderRadius: new BorderRadius.circular(25.0),
-                              borderSide: new BorderSide(),
-                            ),
-                            //fillColor: Colors.green
-                          ),
-                          onChanged: (val){
-
-                            walletController.canTransfer.value=double.parse(val);
-
-                          },
-
-                           style: new TextStyle(
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: RaisedButton(
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                          ),
-                          onPressed: walletController.canTransfer.value <= walletController.bsocialBalanceNumber.value ?  ()  async{
-
-                          var transaction= await  walletController.transferToAnother();
-                          final formatter = new NumberFormat("#,###.##");
-                        var value= formatter.format(walletController.canTransfer.value);
-                         /* Navigator.push(
+                              onPressed: walletController.canTransfer.value <=
+                                      walletController
+                                          .bsocialBalanceNumber.value
+                                  ? () async {
+                                      var transaction = await walletController
+                                          .transferToAnother();
+                                      final formatter =
+                                          new NumberFormat("#,###.##");
+                                      var value = formatter.format(
+                                          walletController.canTransfer.value);
+                                      /* Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => TransactionPage(transaction,value,walletController.valuePasteWallet.value)),
                           );*/
-                          showPopUp(context);
-
-
-                          } : null ,
-                          child: Text(
-                            "Transfer \$Bsocial",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                          color: Color(0xff424f5c),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )),
+                                      showPopUp(context);
+                                    }
+                                  : null,
+                              child: Text(
+                                "Transfer \$Bsocial",
+                                style: TextStyle(
+                                    fontSize: 20, color: Colors.white),
+                              ),
+                              color: Color(0xff424f5c),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )),
           ),
         ),
         inAsyncCall: walletController.isloading.value,
