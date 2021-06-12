@@ -17,6 +17,7 @@ import 'package:convert/convert.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:toast/toast.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class Login extends StatefulWidget {
   Login({Key key, this.title}) : super(key: key);
@@ -216,7 +217,24 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                           onPressed: () {
                             //controller.open();
                             if(walletController.tags.length<12){
+                              Alert(
+                                context: context,
+                                type: AlertType.error,
+                                title: "Review the phrases",
+                                desc: "Please check that the number of phrases is 12 ",
+                                buttons: [
+                                  DialogButton(
 
+                                    child: Text(
+                                      "Ok",
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () => Navigator.pop(context),
+                                    width: 120,
+                                    color: Color(0xff424f5c),
+                                  )
+                                ],
+                              ).show();
                             }else{
                               print("aquii estan los tags  ${ walletController.tags}");
                               importWallet();
@@ -261,7 +279,7 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                       margin: EdgeInsets.only(left: 20, right: 20,top: 20),
 
                       width: double.infinity,
-                      child: OutlinedButton(
+                      child: OutlineButton(
                         child: Text(
                           "Copy your phrase",
                           style: TextStyle(
@@ -270,13 +288,11 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                         onPressed: () {
                           copyPrhases(prhasesString);
                         },
-                        style: ElevatedButton.styleFrom(
-                          side:
-                          BorderSide(width: 2.0, color: Color(0xff424f5c)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
+                        borderSide: BorderSide(width: 2.0, color: Color(0xff424f5c)),
+                        shape:RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ) ,
+
                       ),
                     ),
                     Container(
