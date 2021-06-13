@@ -236,7 +236,6 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                                 ],
                               ).show();
                             }else{
-                              print("aquii estan los tags  ${ walletController.tags}");
                               importWallet();
                             }
                           },

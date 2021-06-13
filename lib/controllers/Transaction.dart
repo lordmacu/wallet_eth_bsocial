@@ -29,7 +29,6 @@ class TransactionWallet extends GetxController {
   @override
   onInit() {
 
-    print("aqui en oin init");
     checkTransactionStatus();
   }
 
@@ -39,7 +38,6 @@ class TransactionWallet extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var transaction = await prefs.getString("transaction");
 
-    print("aqui esta la url en checktransaction ${transaction}");
 
     var url = Uri.parse(
         'https://api.etherscan.io/api?module=transaction&action=getstatus&txhash=${transaction}&apikey=3YF336R8GJFSC6KT34S4JSS812WM536RVU');
@@ -47,7 +45,6 @@ class TransactionWallet extends GetxController {
 
     var resuldt = jsonDecode(response.body);
 
-    print("que te jodan dragona ${resuldt}");
   }
 
 

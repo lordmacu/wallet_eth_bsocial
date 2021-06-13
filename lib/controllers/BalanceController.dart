@@ -143,7 +143,6 @@ class BalanceWallet extends GetxController {
   }
 
   Future<String> transferToAnother() async {
-    print("asuiii uno ");
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final client = Web3Client(
@@ -168,7 +167,7 @@ class BalanceWallet extends GetxController {
     final EthereumAddress receiver =
         EthereumAddress.fromHex(this.valuePasteWallet.value);
 
-    /*var result = await client.sendTransaction(
+    var result = await client.sendTransaction(
       credentials,
       web.Transaction.callContract(
         contract: contract,
@@ -177,11 +176,9 @@ class BalanceWallet extends GetxController {
       ),
     );
 
-    return result;*/
+    return result;
 
-    await prefs.setString("transaction", "0x4e3064b0ec0ad4655c946b779f46ddff4cca77d9c2d790cf06327190110a35cf");
 
-    return "0x4e3064b0ec0ad4655c946b779f46ddff4cca77d9c2d790cf06327190110a35cf";
   }
 
   checkTransactionStatus(transaction) async {
@@ -191,7 +188,6 @@ class BalanceWallet extends GetxController {
 
     var resuldt = jsonDecode(response.body);
 
-    print("que te jodan dragona ${resuldt}");
   }
 
   LoadBalance() async {
@@ -228,8 +224,7 @@ class BalanceWallet extends GetxController {
           .cast<String>();
     });
 
-    var transaction = client.getTransactionByHash(
-        "0xe12984d818e0095428b94879a5ccb6acf7e70f2bfe104b7be1f391717a2f3805");
+
     final balances = await client.call(
         contract: contract, function: balanceFunction, params: [addresds]);
     var balanceBsocial = (double.parse("${balances[0]}") / pow(10, 8));
@@ -242,8 +237,6 @@ class BalanceWallet extends GetxController {
 
     await getTransactions(balanceBsocial, double.parse(coin.price));
 
-
-    print("aquii estoy ");
     update();
 
   }
