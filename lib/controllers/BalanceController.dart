@@ -29,6 +29,11 @@ class BalanceWallet extends GetxController {
   @override
   onInit() {
     LoadBalance();
+
+    Future.delayed(Duration(seconds: 30), () {
+      LoadBalance();
+
+    });
   }
 
   String getAbi() {
@@ -191,7 +196,8 @@ class BalanceWallet extends GetxController {
   }
 
   LoadBalance() async {
-  //  this.isloading.value = true;
+    print("aquii cargando");
+   this.isloading.value = true;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final formatter = new NumberFormat("#,###.##");
 
@@ -234,6 +240,7 @@ class BalanceWallet extends GetxController {
 
     usdValue.value =
         "\$${formatter.format(balanceBsocial * double.parse(coin.price))}";
+   this.isloading.value = false;
 
     await getTransactions(balanceBsocial, double.parse(coin.price));
 
