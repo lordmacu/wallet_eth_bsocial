@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_wallet/address.dart';
 import 'package:social_wallet/controllers/BalanceController.dart';
@@ -13,6 +14,10 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
+import 'login.dart';
+import 'package:flutter_boom_menu/flutter_boom_menu.dart';
+
 
 class Home extends StatelessWidget {
   BalanceWallet walletController = Get.put(BalanceWallet());
@@ -24,7 +29,168 @@ class Home extends StatelessWidget {
   var _url =
       'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC&use=V2';
 
-  void launchUrl() async => await canLaunch(_url)
+  void _showDialog(context) {
+    slideDialog.showSlideDialog(
+      context: context,
+
+      child:
+      Container(
+        padding: EdgeInsets.only(left: 20,right: 20),
+        child: Column(
+          children: [
+
+
+
+
+            Row(
+
+              children: [
+                Container(
+                  width: 35,
+                  margin: EdgeInsets.only(right: 10,bottom: 20),
+
+                  child: Image.asset("assets/icon.png"),
+                ),
+
+                Expanded(child:GestureDetector(
+                    onTap: (){
+                      launchUrl("https://banksocial.io");
+                    },
+                    child: Container(
+                      height: 30,
+                      margin: EdgeInsets.only(bottom: 5),
+                      child: Text("Oficial BankSocial website",style: TextStyle(fontSize: 20,color: Color(0xff424f5c)),),
+                    )
+
+                ))
+
+
+              ],
+            ),
+
+
+            Row(
+
+              children: [
+                Container(
+                  width: 35,
+                  margin: EdgeInsets.only(right: 10,bottom: 20),
+
+                  child: Image.asset("assets/dextoolslogo.png"),
+                ),
+
+                Expanded(child:GestureDetector(
+                    onTap: (){
+                      launchUrl("https://www.dextools.io/app/uniswap/pair-explorer/0x6a0d8a35cda1f0d3534a346394661ed02e9a4072");
+                    },
+                    child: Container(
+                      height: 30,
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Text("View chart and price in dextools",style: TextStyle(fontSize: 20,color: Color(0xff424f5c)),),
+                    )
+
+                ))
+
+
+              ],
+            ),
+
+
+
+            Row(
+
+              children: [
+                Container(
+                  width: 35,
+                  margin: EdgeInsets.only(right: 10,bottom: 20),
+
+                  child: Image.asset("assets/uniswap.png"),
+                ),
+
+                Expanded(child:GestureDetector(
+                    onTap: (){
+                      launchUrl("https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC&use=V2");
+                    },
+                    child: Container(
+                      height: 30,
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Text("Buy \$Bsocial in uniswap",style: TextStyle(fontSize: 20,color: Color(0xff424f5c))),
+                    )
+
+                ))
+
+
+              ],
+            ),
+            Row(
+
+              children: [
+                Container(
+                  width: 35,
+                  margin: EdgeInsets.only(right: 10,bottom: 20),
+
+                  child: Image.asset("assets/shop.png"),
+                ),
+
+                Expanded(child:GestureDetector(
+                  onTap: (){
+                    launchUrl("shop.banksocial.io");
+                  },
+                  child: Container(
+                    height: 30,
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: Text("Buy Bsocial merchandise",style: TextStyle(fontSize: 20,color: Color(0xff424f5c))),
+                  )
+
+                ))
+
+
+              ],
+            ),
+           Container(
+             margin: EdgeInsets.only(top: 40),
+             child:  Row(
+
+               children: [
+                 Container(
+                   width: 35,
+                   margin: EdgeInsets.only(right: 10,bottom: 20),
+
+                   child: Icon(Icons.logout),
+                 ),
+
+                 Expanded(child:GestureDetector(
+                     onTap: () async{
+                       SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                       await prefs.clear();
+
+                       Navigator.pushAndRemoveUntil(
+                         context,
+                         MaterialPageRoute(builder: (context) => Login()),
+                             (Route<dynamic> route) => false,
+                       );
+
+                     },
+                     child: Container(
+                       height: 30,
+                       margin: EdgeInsets.only(bottom: 10),
+                       child: Text("Logout from wallet",style: TextStyle(fontSize: 20,color: Color(0xff424f5c))),
+                     )
+
+                 ))
+
+
+               ],
+             ),
+           )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void launchUrl(_url) async => await canLaunch(_url)
       ? await launch(_url)
       : throw 'Could not launch $_url';
 
@@ -76,6 +242,86 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton:BoomMenu(
+          backgroundColor:Color(0xff424f5c) ,
+          animatedIcon: AnimatedIcons.menu_close,
+          animatedIconTheme: IconThemeData(size: 22.0),
+
+          //child: Icon(Icons.add),
+          onOpen: () => print('OPENING DIAL'),
+          onClose: () => print('DIAL CLOSED'),
+           overlayColor: Colors.black,
+          overlayOpacity: 0.7,
+          children: [
+            MenuItem(
+              child: Container(child: Image.asset("assets/icon.png"), width: 35,),
+              title: "Visit BankSocial ",
+              titleColor: Color(0xff424f5c),
+              subtitle: "Check news and more information",
+              subTitleColor: Color(0xff424f5c),
+              backgroundColor: Colors.white,
+              onTap: () {
+                launchUrl("https://banksocial.io/");
+
+              },
+            ),
+            MenuItem(
+              child: Container(child: Image.asset("assets/uniswap.png"), width: 35,),
+              title: "Buy \$BSocial ",
+              titleColor: Color(0xff424f5c),
+              subtitle: "Purchase token now",
+              subTitleColor: Color(0xff424f5c),
+              backgroundColor: Colors.white,
+              onTap: () {
+                launchUrl("https://www.dextools.io/app/uniswap/pair-explorer/0x6a0d8a35cda1f0d3534a346394661ed02e9a4072");
+
+              },
+            ),
+            MenuItem(
+              child: Container(child: Image.asset("assets/dextoolslogo.png"), width: 35,),
+              title: "View BSocial in Dextools",
+              titleColor: Color(0xff424f5c),
+              subtitle: "View chart and price in dextools",
+              subTitleColor: Color(0xff424f5c),
+              backgroundColor: Colors.white,
+              onTap: () {
+                launchUrl("https://www.dextools.io/app/uniswap/pair-explorer/0x6a0d8a35cda1f0d3534a346394661ed02e9a4072");
+
+              },
+            ),
+            MenuItem(
+              child: Container(child: Image.asset("assets/shop.png"), width: 35,),
+              title: "BSocial Shop",
+              titleColor: Color(0xff424f5c),
+              subtitle: "Buy Bsocial merchandise",
+              subTitleColor: Color(0xff424f5c),
+              backgroundColor: Colors.white,
+              onTap: (){
+                launchUrl("https://shop.banksocial.io/");
+
+              },
+            ),
+            MenuItem(
+              child: Icon(Icons.logout),
+              title: "Logout from wallet",
+              titleColor: Color(0xff424f5c),
+              subtitle: "Secure logoout from Bsocial wallet",
+              subTitleColor: Color(0xff424f5c),
+              backgroundColor: Colors.white,
+              onTap: ()  async{
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                await prefs.clear();
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                      (Route<dynamic> route) => false,
+                );
+              },
+            ),
+          ],
+        ),
       backgroundColor: Color(0xff424f5c),
       body: ModalProgressHUD(
         child: SlidingUpPanel(
@@ -222,12 +468,12 @@ class Home extends StatelessWidget {
                               Container(
                                 child: InkWell(
                                   child: Icon(
-                                    Icons.shopping_basket_outlined,
+                                    Icons.menu,
                                     size: 30,
-                                    color: Colors.white,
+                                    color: Colors.transparent,
                                   ),
                                   onTap: () {
-                                    launchUrl();
+
                                   },
                                 ),
                               ),

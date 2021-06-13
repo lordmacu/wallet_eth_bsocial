@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  wallet_hd_pro: "0.0.5"
+  wallet_hd_pro: "0.0.6"
   animated_background:
   sliding_up_panel:
   textfield_tags:
@@ -41,6 +41,8 @@ dependencies:
   share:
   url_launcher:
   flutter_launcher_icons:
+  slide_popup_dialog:
+  flutter_boom_menu:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
@@ -69,6 +71,9 @@ flutter:
     - assets/white-logo-dark.png
     - assets/logo_social.png
     - assets/icon.png
+    - assets/dextoolslogo.png
+    - assets/uniswap.png
+    - assets/shop.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -84,7 +84,6 @@ class BalanceWallet extends GetxController {
     var url = Uri.parse(
         'https://api.etherscan.io/api?module=account&action=tokentx&address=${wallet}&startblock=0&endblock=999999999&sort=desc&apikey=3YF336R8GJFSC6KT34S4JSS812WM536RVU');
     var response = await http.get(url);
-    print("este es el resultado  ${response}");
 
     var result = jsonDecode(response.body);
 
@@ -134,6 +133,8 @@ class BalanceWallet extends GetxController {
     var totalGained = balanceBsocial - balanceBsociadl;
 
     totalEarnings.value = "\$${formatter.format(totalGained * priceCoin)}";
+
+    this.isloading.value = false;
   }
 
   String convertTimeStampToHumanDate(int timeStamp) {
@@ -194,7 +195,7 @@ class BalanceWallet extends GetxController {
   }
 
   LoadBalance() async {
-    this.isloading.value = true;
+  //  this.isloading.value = true;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final formatter = new NumberFormat("#,###.##");
 
@@ -239,8 +240,11 @@ class BalanceWallet extends GetxController {
     usdValue.value =
         "\$${formatter.format(balanceBsocial * double.parse(coin.price))}";
 
-    getTransactions(balanceBsocial, double.parse(coin.price));
+    await getTransactions(balanceBsocial, double.parse(coin.price));
 
-    this.isloading.value = false;
+
+    print("aquii estoy ");
+    update();
+
   }
 }

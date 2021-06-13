@@ -167,6 +167,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_boom_menu:
+    dependency: "direct main"
+    description:
+      name: flutter_boom_menu
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -212,6 +219,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
+  ibip39:
+    dependency: transitive
+    description:
+      name: ibip39
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   image:
     dependency: transitive
     description:
@@ -427,6 +441,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slide_popup_dialog:
+    dependency: "direct main"
+    description:
+      name: slide_popup_dialog
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   sliding_up_panel:
     dependency: "direct main"
     description:
@@ -559,7 +580,7 @@ packages:
       name: wallet_hd_pro
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.5"
+    version: "0.0.6"
   web3dart:
     dependency: transitive
     description:

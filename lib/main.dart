@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_wallet/loading.dart';
 import 'package:wallet_hd_pro/wallet_hd_pro.dart';
 import 'login.dart';
 void main() {
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Login(),
+      home: LoadingPage(),
     );
   }
 }
