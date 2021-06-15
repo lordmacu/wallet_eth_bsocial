@@ -28,7 +28,7 @@ class BalanceWallet extends GetxController {
 
   @override
   onInit() {
-   // LoadBalance();
+  LoadBalance();
 
 
   }
