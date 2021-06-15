@@ -27,6 +27,7 @@ import 'package:http/http.dart'; //You can also import the browser version
 import 'dart:math';
 import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
+import 'package:after_layout/after_layout.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -35,12 +36,12 @@ class Home extends StatefulWidget {
   _Home createState() => _Home();
 }
 
-class _Home extends State<Home> {
+class _Home extends State<Home>   with AfterLayoutMixin<Home>{
   BalanceWallet walletController = Get.put(BalanceWallet());
   TextEditingController walletControlerText = TextEditingController();
   Timer timer;
 
-  PanelController controller = PanelController();
+  PanelController controller;
   final _formKey = GlobalKey<FormState>();
   var transactions = [];
 
@@ -178,9 +179,7 @@ class _Home extends State<Home> {
     // TODO: implement initState
     super.initState();
 
-    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => LoadBalanceWihoutLoading(false));
-
-    LoadBalanceWihoutLoading(true);
+    controller=PanelController();
   }
 
   void launchUrl(_url) async => await canLaunch(_url)
@@ -995,5 +994,13 @@ class _Home extends State<Home> {
             inAsyncCall: walletController.isloading.value,
           )),
     );
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    // TODO: implement afterFirstLayout
+    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => LoadBalanceWihoutLoading(false));
+
+    LoadBalanceWihoutLoading(true);
   }
 }
