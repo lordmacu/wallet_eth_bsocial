@@ -43,6 +43,7 @@ dependencies:
   flutter_launcher_icons:
   slide_popup_dialog:
   flutter_boom_menu:
+  after_layout:
 
 
   # The following adds the Cupertino Icons font to your application.
