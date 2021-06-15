@@ -28,12 +28,9 @@ class BalanceWallet extends GetxController {
 
   @override
   onInit() {
-    LoadBalance();
+   // LoadBalance();
 
-    Future.delayed(Duration(seconds: 30), () {
-      LoadBalance();
 
-    });
   }
 
   String getAbi() {
@@ -192,6 +189,59 @@ class BalanceWallet extends GetxController {
     var response = await http.get(url);
 
     var resuldt = jsonDecode(response.body);
+
+  }
+
+  LoadBalanceWihoutLoading() async {
+    print("aquii cargando");
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final formatter = new NumberFormat("#,###.##");
+
+    var token = prefs.getString("token");
+    var httpClient = new Client();
+    var ethClient = new Web3Client(
+        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        httpClient);
+    Credentials fromHex = EthPrivateKey.fromHex(token);
+    var addresds = await fromHex.extractAddress();
+
+    var balance = await ethClient.getBalance(addresds);
+
+    ethBalance.value = "${balance.getValueInUnit(EtherUnit.ether)}";
+
+    final EthereumAddress contractAddr =
+    EthereumAddress.fromHex('0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC');
+
+    var abicode = getAbi();
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abicode, 'Bsocial'), contractAddr);
+
+    final balanceFunction = contract.function('balanceOf');
+
+    final client = Web3Client(
+        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        Client(), socketConnector: () {
+      return IOWebSocketChannel.connect(
+          "wss://mainnet.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
+          .cast<String>();
+    });
+
+
+    final balances = await client.call(
+        contract: contract, function: balanceFunction, params: [addresds]);
+    var balanceBsocial = (double.parse("${balances[0]}") / pow(10, 8));
+    Coin coin = await getpriceCoin();
+    bsocialBalance.value = "${formatter.format(balanceBsocial)}";
+    bsocialBalanceNumber.value = balanceBsocial;
+
+    usdValue.value =
+    "\$${formatter.format(balanceBsocial * double.parse(coin.price))}";
+
+
+    await getTransactions(balanceBsocial, double.parse(coin.price));
+
+    update();
 
   }
 
