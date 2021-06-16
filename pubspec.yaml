@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  wallet_hd_pro: "0.0.6"
+  wallet_hd:
   animated_background:
   sliding_up_panel:
   textfield_tags:
@@ -44,6 +44,9 @@ dependencies:
   slide_popup_dialog:
   flutter_boom_menu:
   after_layout:
+  in_app_update:
+  forceupdate:
+  fl_chart:
 
 
   # The following adds the Cupertino Icons font to your application.
