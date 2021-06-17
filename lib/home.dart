@@ -9,17 +9,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_wallet/address.dart';
 import 'package:social_wallet/controllers/BalanceController.dart';
-import 'package:social_wallet/controllers/WalletController.dart';
-import 'package:social_wallet/transaction.dart';
+
 import 'package:social_wallet/uiHelpers/animationBackground.dart';
 import 'package:get/get.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/services.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 import 'login.dart';
-import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:social_wallet/models/Transaction.dart' as tr;
 import 'package:forceupdate/forceupdate.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -27,13 +24,10 @@ import 'package:http/http.dart' as http;
 
 import 'package:social_wallet/models/Coin.dart';
 import 'package:web3dart/web3dart.dart';
-import 'package:http/http.dart'; //You can also import the browser version
-import 'dart:math';
+import 'package:http/http.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 import 'package:after_layout/after_layout.dart';
-
-import 'package:http/http.dart' as http;
 import 'package:in_app_update/in_app_update.dart';
 
 class Home extends StatefulWidget {
@@ -46,12 +40,13 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   TextEditingController walletControlerText = TextEditingController();
   Timer timer;
   Timer timerGraphic;
+  Timer timerTransactions;
 
   var max;
-  var  min;
+  var min;
   List<FlSpot> spots = [];
   List<double> rates = [];
-  var range="1D";
+  var range = "1D";
 
   var lastPrice;
   bool isShowPopup = false;
@@ -73,9 +68,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   }
 
   LoadBalanceWihoutLoading(bool withloading) async {
-
     if (withloading) {
-
       walletController.isloading.value = true;
     }
 
@@ -126,19 +119,16 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
         "\$${formatter.format(balanceBsocial * double.parse(coin.price))}";
     if (withloading) {
       controller.open();
-
     }
-    await getTransactions(balanceBsocial, double.parse(coin.price));
 
-
-
-
-    await Future.delayed(Duration(seconds: 1));
     if (withloading) {
+      prefs.setDouble("balanceCoin", balanceBsocial);
+      prefs.setDouble("priceCoin", double.parse(coin.price));
+
+      await getTransactions(balanceBsocial, double.parse(coin.price));
+      await Future.delayed(Duration(seconds: 1));
       controller.close();
-
     }
-
   }
 
   getTransactions(balanceBsocial, priceCoin) async {
@@ -148,8 +138,13 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     var wallet = prefs.getString("wallet");
     final formatter = new NumberFormat("#,###.##");
 
+    /*var url = Uri.parse(
+        'https://api.etherscan.io/api?module=account&action=tokentx&address=${wallet}&startblock=0&endblock=999999999&sort=desc&apikey=3YF336R8GJFSC6KT34S4JSS812WM536RVU');*/
     var url = Uri.parse(
-        'https://api.etherscan.io/api?module=account&action=tokentx&address=${wallet}&startblock=0&endblock=999999999&sort=desc&apikey=3YF336R8GJFSC6KT34S4JSS812WM536RVU');
+        'https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC&address=${wallet}&page=1&offset=100&sort=desc&apikey=3YF336R8GJFSC6KT34S4JSS812WM536RVU');
+
+    print("aquii la url ${url}");
+
     var response = await http.get(url);
 
     var result = jsonDecode(response.body);
@@ -212,6 +207,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   void dispose() {
     timer.cancel();
     timerGraphic.cancel();
+    timerTransactions.cancel();
 
     super.dispose();
   }
@@ -234,9 +230,12 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                 var value = "${barSpot.y}".substring(0, 11);
 
                 print("este es el valor  ${barSpot.x.toInt()}");
-                var timeInHuman=walletController.convertTimeStampToHumanDateMinutes(barSpot.x.toInt());
-                if(range!="1D"){
-                  timeInHuman=walletController.convertTimeStampToHumanDateMinutesComplete(barSpot.x.toInt());
+                var timeInHuman = walletController
+                    .convertTimeStampToHumanDateMinutes(barSpot.x.toInt());
+                if (range != "1D") {
+                  timeInHuman = walletController
+                      .convertTimeStampToHumanDateMinutesComplete(
+                          barSpot.x.toInt());
                 }
                 return LineTooltipItem(
                   '${value} \n ${timeInHuman}',
@@ -309,31 +308,32 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
           show: true,
           border: Border.all(color: const Color(0xff37434d), width: 0)),
       lineBarsData: [
-        spots.length>0 ? LineChartBarData(
-          spots: spots,
-          isCurved: true,
-          colors: gradientColors,
-          barWidth: 1,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: false,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
-          ),
-        ): null,
+        spots.length > 0
+            ? LineChartBarData(
+                spots: spots,
+                isCurved: true,
+                colors: gradientColors,
+                barWidth: 1,
+                isStrokeCapRound: true,
+                dotData: FlDotData(
+                  show: false,
+                ),
+                belowBarData: BarAreaData(
+                  show: false,
+                  colors: gradientColors
+                      .map((color) => color.withOpacity(0.3))
+                      .toList(),
+                ),
+              )
+            : null,
       ],
     );
   }
 
   handleAppLifecycleState() {
     AppLifecycleState _lastLifecyleState;
+    // ignore: missing_return
     SystemChannels.lifecycle.setMessageHandler((msg) {
-
-      print('SystemChannels> $msg');
-
       switch (msg) {
         case "AppLifecycleState.paused":
           _lastLifecyleState = AppLifecycleState.paused;
@@ -353,25 +353,27 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     });
   }
 
-  Future loadJson() async{
+  Future loadJson() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var chartRange="1D";
-    if(prefs.getString("chartRange")!=null){
-      chartRange=prefs.getString("chartRange");
+    var chartRange = "1D";
+    if (prefs.getString("chartRange") != null) {
+      chartRange = prefs.getString("chartRange");
     }
     setState(() {
-      range=chartRange;
+      range = chartRange;
     });
     List<FlSpot> spotsTemp = [];
 
-
     print("load graphic");
 
-    var now =DateTime.now();
-    var end =now.subtract(Duration(hours: 24));
-    var stringNow="${now.millisecondsSinceEpoch}".substring(0, 12);;
-    var url = Uri.parse('https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=10102&range=${chartRange}');
+    var now = DateTime.now();
+    var end = now.subtract(Duration(hours: 2));
+    var stringNow = "${now.millisecondsSinceEpoch}".substring(0, 12);
+    ;
+
+    var url = Uri.parse(
+        'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=10102&range=${chartRange}');
 
     print(url);
     var response = await http.get(url);
@@ -379,35 +381,39 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     var jsonData = jsonDecode(response.body);
     var data = jsonData["data"]["points"];
 
+    List tempData = [];
     data.forEach((final String key, final value) {
-
-      var valueCoin=value["v"][0].toDouble();
-      var coinInstring= "${valueCoin}"[0];
-
-      if(coinInstring=="0"){
-        print("coin in string ${coinInstring}");
-
-        FlSpot spot = FlSpot(double.parse(key), value["v"][0].toDouble());
-        rates.add(value["v"][0].toDouble());
-        spotsTemp.add(spot);
+      var valueCoin = value["v"][0].toDouble();
+      var coinInstring = "${valueCoin}"[0];
+      if (coinInstring == "0") {
+        tempData.add(
+            {"date": double.parse(key), "price": value["v"][0].toDouble()});
       }
-
-
-
     });
 
-    print("esta es la cantidad ${spotsTemp.length}");
-  //  spotsTemp.removeRange((spotsTemp.length/2).toInt(), spotsTemp.length);
-    print("esta es la cantidad ${spotsTemp.length}");
+    tempData.sort((a, b) {
+      return a["date"]
+          .toString()
+          .toLowerCase()
+          .compareTo(b["date"].toString().toLowerCase());
+    });
 
+    tempData.forEach((element) {
+      FlSpot spot = FlSpot(element["date"], element["price"]);
+      rates.add(element["price"]);
+      spotsTemp.add(spot);
+    });
 
     setState(() {
-      max = "${rates.reduce((curr, next) => curr > next ? curr : next)}".substring(0, 10);
-      min = "${rates.reduce((curr, next) => curr < next ? curr : next)}".substring(0, 10);
-      spots=spotsTemp;
-      lastPrice="${rates.last}".substring(0, 10);
+      max = "${rates.reduce((curr, next) => curr > next ? curr : next)}"
+          .substring(0, 10);
+      min = "${rates.reduce((curr, next) => curr < next ? curr : next)}"
+          .substring(0, 10);
+      spots = spotsTemp;
+      lastPrice = "${rates.last}".substring(0, 10);
       print("this is the last ${lastPrice}");
     });
+    walletController.isloading.value=false;
 
   }
 
@@ -415,12 +421,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    print("aquiii ${DateTime.now().microsecondsSinceEpoch}");
-
     controller = PanelController();
-
-
   }
 
   void launchUrl(_url) async => await canLaunch(_url)
@@ -641,65 +642,75 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
         content: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: 20),
-              child:    RaisedButton(
-                shape: new RoundedRectangleBorder(
-                  borderRadius:
-                  new BorderRadius.circular(
-                      30.0),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-
-                  prefs.setString("chartRange", "1D");
-                  setState(() {
-                    range="1D";
-                  });
-                  loadJson();
-                },
-                child: Text(
-                  "24 Hours",
-                  style: TextStyle(
-                      fontSize: 17,
-                      color: Colors.white),
-                ),
-                color: Color(0xff424f5c),
-              )
-            ),
-            Container(
-                margin: EdgeInsets.only(top: 10),
-                child:    RaisedButton(
+                margin: EdgeInsets.only(top: 20),
+                child: RaisedButton(
                   shape: new RoundedRectangleBorder(
-                    borderRadius:
-                    new BorderRadius.circular(
-                        30.0),
+                    borderRadius: new BorderRadius.circular(30.0),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
+                    walletController.isloading.value=true;
+                    prefs.setString("chartRange", "1D");
                     setState(() {
-                      range="7D";
+                      range = "1D";
+                    });
+                    loadJson();
+                  },
+                  child: Text(
+                    "24 Hours",
+                    style: TextStyle(fontSize: 17, color: Colors.white),
+                  ),
+                  color: Color(0xff424f5c),
+                )),
+            Container(
+                margin: EdgeInsets.only(top: 10),
+                child: RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(30.0),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    walletController.isloading.value=true;
+
+                    setState(() {
+                      range = "7D";
                     });
                     prefs.setString("chartRange", "7D");
                     loadJson();
-
                   },
                   child: Text(
                     "7 Days",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white),
+                    style: TextStyle(fontSize: 17, color: Colors.white),
                   ),
                   color: Color(0xff424f5c),
-                )
-            ),
+                )),
+            Container(
+                margin: EdgeInsets.only(top: 10),
+                child: RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(30.0),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    walletController.isloading.value=true;
 
-
+                    setState(() {
+                      range = "1M";
+                    });
+                    prefs.setString("chartRange", "1M");
+                    loadJson();
+                  },
+                  child: Text(
+                    "1 Month",
+                    style: TextStyle(fontSize: 17, color: Colors.white),
+                  ),
+                  color: Color(0xff424f5c),
+                )),
           ],
         ),
-        buttons: [
-
-        ]).show();
+        buttons: []).show();
   }
+
   buildMenuItem(icon, title, subitle, url) {
     var isLogout = false;
     if (icon == 'assets/logout.png') {
@@ -865,91 +876,131 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                   ),
                                 ],
                               )),
-                          rates.length > 0 ? Expanded(
-                              flex: 14,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Row(
-
+                          rates.length > 0
+                              ? Expanded(
+                                  flex: 14,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      Container(
-                                        margin: EdgeInsets.only(left: 30),
-                                        child: Text("Max: ${max}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
+                                      Row(
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(left: 30),
+                                            child: Text("Max: ${max}",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12)),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.only(
+                                                left: 5,
+                                                right: 5,
+                                                top: 2,
+                                                bottom: 2),
+                                            decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                fontSize: 12)),
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            margin: EdgeInsets.only(right: 30),
+                                            child: Text("Current: ${lastPrice}",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0xff424f5c),
+                                                    fontSize: 13)),
+                                          )
+                                        ],
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                       ),
                                       Container(
-
-                                        padding: EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(30)
-                                        ),
-                                        margin: EdgeInsets.only(right: 30),
-                                        child: Text("Current: ${lastPrice}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                                color: Color(0xff424f5c),
-                                                fontSize: 13)),
-                                      )
-                                    ],
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  ),
-                                  Container(
-                                      margin:
-                                          EdgeInsets.only(top: 5, bottom: 5),
-                                      height: (height * 20) / 100,
-                                      padding: EdgeInsets.only(
-                                          left: 0, right: 0, top: 20),
-                                      width: double.infinity,
-                                      child: spots.length>0  ?LineChart(
-                                      mainData(),
-                    ) : Container() ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: (){
-                                          showTimePopUp(context);
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
-
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(30)
+                                          margin: EdgeInsets.only(
+                                              top: 5, bottom: 5),
+                                          height: (height * 20) / 100,
+                                          padding: EdgeInsets.only(
+                                              left: 0, right: 0, top: 20),
+                                          width: double.infinity,
+                                          child: spots.length > 0
+                                              ? LineChart(
+                                                  mainData(),
+                                                )
+                                              : Container()),
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              showTimePopUp(context);
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                  left: 5,
+                                                  right: 5,
+                                                  top: 2,
+                                                  bottom: 2),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30)),
+                                              margin: EdgeInsets.only(
+                                                  top: 10, left: 30),
+                                              child: Stack(
+                                                children: [
+                                                  Visibility(
+                                                    child: Text(
+                                                      "Last 24 hours",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                          color:
+                                                              Color(0xff424f5c),
+                                                          fontSize: 12),
+                                                    ),
+                                                    visible: range == "1D",
+                                                  ),
+                                                  Visibility(
+                                                    child: Text(
+                                                      "Last 7 days",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                          color:
+                                                              Color(0xff424f5c),
+                                                          fontSize: 12),
+                                                    ),
+                                                    visible: range == "7D",
+                                                  ),
+                                                  Visibility(
+                                                    child: Text(
+                                                      "Last month",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                          color:
+                                                              Color(0xff424f5c),
+                                                          fontSize: 12),
+                                                    ),
+                                                    visible: range == "1M",
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                          margin:
-                                          EdgeInsets.only(top: 10, left: 30),
-                                          child: Text(
-                                            range=="1D" ? "Last 24 hours" : "Last 7 days",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                color: Color(0xff424f5c),
-                                                fontSize: 12),
-                                          ),
-                                        ),
+                                          Expanded(
+                                              child: Container(
+                                            margin: EdgeInsets.only(
+                                                top: 10, right: 30),
+                                            child: Text(
+                                              "Min: ${min}",
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            ),
+                                          )),
+                                        ],
                                       ),
-                                      Expanded(
-                                          child: Container(
-                                        margin:
-                                            EdgeInsets.only(top: 10, right: 30),
-                                        child: Text(
-                                          "Min: ${min}",
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12),
-                                        ),
-                                      )),
-
                                     ],
-                                  ),
-                                ],
-                              )) : Container(),
+                                  ))
+                              : Container(),
                         ],
                       ),
                     ),
@@ -971,63 +1022,63 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                           ),
                         )),
                     AnimatedOpacity(
-                      opacity: isShowPopup ? 1 :  0,
-                      duration: Duration(milliseconds: 500),
-                      child: isShowPopup ? Container(
-                        padding: EdgeInsets.all(40),
-                        color: Colors.black.withOpacity(0.5),
-                        child: Column(
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
-                          children: [
-                            buildMenuItem(
-                                "assets/icon.png",
-                                "Visit BankSocial ",
-                                "Check news and more information",
-                                "https://banksocial.io/"),
-                            buildMenuItem(
-                                "assets/uniswap.png",
-                                "Buy \$BSocial  ",
-                                "Purchase token now",
-                                "https://exchange.banksocial.io/#/swap?inputCurrency=ETH&outputCurrency=0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC&use=V2"),
-                            buildMenuItem(
-                                "assets/dextoolslogo.png",
-                                "View BSocial in Dextools ",
-                                "Check news and more information",
-                                "https://www.dextools.io/app/uniswap/pair-explorer/0x6a0d8a35cda1f0d3534a346394661ed02e9a4072"),
-                            buildMenuItem(
-                                "assets/shop.png",
-                                "BSocial Shop ",
-                                "Buy Bsocial merchandise",
-                                "https://shop.banksocial.io/"),
-                            buildMenuItem(
-                                "assets/logout.png",
-                                "Logout from wallet",
-                                "Secure logoout from Bsocial wallet",
-                                "https://banksocial.io/"),
-                            Container(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isShowPopup = false;
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.close,
-                                  color: Color(0xff424f5c),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.white,
-                                  shape: CircleBorder(),
-                                  padding: EdgeInsets.all(15),
-                                ),
+                      opacity: isShowPopup ? 1 : 0,
+                      duration: Duration(milliseconds: 300),
+                      child: isShowPopup
+                          ? Container(
+                              padding: EdgeInsets.all(40),
+                              color: Colors.black.withOpacity(0.5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  buildMenuItem(
+                                      "assets/icon.png",
+                                      "Visit BankSocial ",
+                                      "Check news and more information",
+                                      "https://banksocial.io/"),
+                                  buildMenuItem(
+                                      "assets/uniswap.png",
+                                      "Buy \$BSocial  ",
+                                      "Purchase token now",
+                                      "https://exchange.banksocial.io/#/swap?inputCurrency=ETH&outputCurrency=0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC&use=V2"),
+                                  buildMenuItem(
+                                      "assets/dextoolslogo.png",
+                                      "View BSocial in Dextools ",
+                                      "Check news and more information",
+                                      "https://www.dextools.io/app/uniswap/pair-explorer/0x6a0d8a35cda1f0d3534a346394661ed02e9a4072"),
+                                  buildMenuItem(
+                                      "assets/shop.png",
+                                      "BSocial Shop ",
+                                      "Buy Bsocial merchandise",
+                                      "https://shop.banksocial.io/"),
+                                  buildMenuItem(
+                                      "assets/logout.png",
+                                      "Logout from wallet",
+                                      "Secure logoout from Bsocial wallet",
+                                      "https://banksocial.io/"),
+                                  Container(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isShowPopup = false;
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Color(0xff424f5c),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.white,
+                                        shape: CircleBorder(),
+                                        padding: EdgeInsets.all(15),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             )
-                          ],
-                        ),
-                      ): Container(),
+                          : Container(),
                     )
-
                   ],
                 ),
               ),
@@ -1344,125 +1395,124 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                               fontWeight: FontWeight.w300),
                                         ),
                                       ),
-                                      transactions.length>0 ? Expanded(
-                                          child: ListView.builder(
-                                              padding: EdgeInsets.only(top: 10),
-                                              itemCount: transactions.length,
-                                              itemBuilder: (context, index) {
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    showTransaction(
-                                                        transactions[index]);
-                                                  },
-                                                  child: Container(
-                                                    color: Colors.white,
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 20, top: 0),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Expanded(
-                                                          child: Row(
-                                                            children: [
-                                                              Container(
-                                                                child: transactions[index]
-                                                                            .type ==
-                                                                        "up"
-                                                                    ? Icon(
-                                                                        Icons
-                                                                            .arrow_circle_up,
-                                                                        color: Colors
-                                                                            .greenAccent,
-                                                                      )
-                                                                    : Icon(
-                                                                        Icons
-                                                                            .arrow_circle_down,
-                                                                        color: Colors
-                                                                            .redAccent,
-                                                                      ),
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        right:
-                                                                            5),
-                                                              ),
-                                                              Expanded(
-                                                                  child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Container(
-                                                                    child: Text(
-                                                                      "${transactions[index].from}",
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              15,
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          color:
-                                                                              Color(0xff424f5c)),
-                                                                    ),
-                                                                  ),
-                                                                  Container(
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Text(
-                                                                          "${walletController.convertTimeStampToHumanDate(int.parse(transactions[index].timeStamp))}",
-                                                                          style: TextStyle(
-                                                                              fontSize: 14,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.grey.withOpacity(0.7)),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            top:
-                                                                                0),
-                                                                  )
-                                                                ],
-                                                              ))
-                                                            ],
-                                                          ),
-                                                          flex: 6,
-                                                        ),
-                                                        Expanded(
-                                                            flex: 4,
-                                                            child: Container(
+                                      transactions.length > 0
+                                          ? Expanded(
+                                              child: ListView.builder(
+                                                  padding:
+                                                      EdgeInsets.only(top: 10),
+                                                  itemCount:
+                                                      transactions.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        showTransaction(
+                                                            transactions[
+                                                                index]);
+                                                      },
+                                                      child: Container(
+                                                        color: Colors.white,
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 20,
+                                                                top: 0),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
+                                                          children: [
+                                                            Expanded(
                                                               child: Row(
                                                                 children: [
-                                                                  Text(
-                                                                    "${transactions[index].price}",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            15,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Color(
-                                                                            0xff424f5c)),
-                                                                  )
+                                                                  Container(
+                                                                    child: transactions[index].type ==
+                                                                            "up"
+                                                                        ? Icon(
+                                                                            Icons.arrow_circle_up,
+                                                                            color:
+                                                                                Colors.greenAccent,
+                                                                          )
+                                                                        : Icon(
+                                                                            Icons.arrow_circle_down,
+                                                                            color:
+                                                                                Colors.redAccent,
+                                                                          ),
+                                                                    margin: EdgeInsets
+                                                                        .only(
+                                                                            right:
+                                                                                5),
+                                                                  ),
+                                                                  Expanded(
+                                                                      child:
+                                                                          Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Container(
+                                                                        child:
+                                                                            Text(
+                                                                          "${transactions[index].from}",
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                          style: TextStyle(
+                                                                              fontSize: 15,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Color(0xff424f5c)),
+                                                                        ),
+                                                                      ),
+                                                                      Container(
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Text(
+                                                                              "${walletController.convertTimeStampToHumanDate(int.parse(transactions[index].timeStamp))}",
+                                                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey.withOpacity(0.7)),
+                                                                            )
+                                                                          ],
+                                                                        ),
+                                                                        margin: EdgeInsets.only(
+                                                                            top:
+                                                                                0),
+                                                                      )
+                                                                    ],
+                                                                  ))
                                                                 ],
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .end,
                                                               ),
-                                                            ))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              })) : Container()
+                                                              flex: 6,
+                                                            ),
+                                                            Expanded(
+                                                                flex: 4,
+                                                                child:
+                                                                    Container(
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        "${transactions[index].price}",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                15,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Color(0xff424f5c)),
+                                                                      )
+                                                                    ],
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .end,
+                                                                  ),
+                                                                ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }))
+                                          : Container()
                                     ],
                                   ),
                                 )),
@@ -1475,6 +1525,15 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
             inAsyncCall: walletController.isloading.value,
           )),
     );
+  }
+
+  loadTransactionsTimer() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var balanceBsocial = await prefs.getDouble("balanceCoin");
+    var priceCoin = await prefs.getDouble("priceCoin");
+
+    await getTransactions(balanceBsocial, priceCoin);
   }
 
   @override
@@ -1490,10 +1549,13 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     timer = Timer.periodic(
         Duration(seconds: 30), (Timer t) => LoadBalanceWihoutLoading(false));
 
-
     handleAppLifecycleState();
-    timerGraphic = Timer.periodic(
-        Duration(seconds: 20), (Timer t) => loadJson());
+    timerGraphic =
+        Timer.periodic(Duration(seconds: 20), (Timer t) => loadJson());
+
+    timerTransactions = Timer.periodic(
+        Duration(seconds: 90), (Timer t) => loadTransactionsTimer());
+
     loadJson();
     LoadBalanceWihoutLoading(true);
   }

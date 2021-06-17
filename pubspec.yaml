@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  wallet_hd:
+  wallet_hd_pro:
   animated_background:
   sliding_up_panel:
   textfield_tags:
