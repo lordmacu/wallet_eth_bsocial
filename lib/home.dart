@@ -228,6 +228,8 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
             getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
               return touchedBarSpots.map((LineBarSpot barSpot) {
                 var value = "${barSpot.y}".substring(0, 11);
+
+                print("este es el valor  ${barSpot.x.toInt()}");
                 return LineTooltipItem(
                   '${value} \n ${walletController.convertTimeStampToHumanDateMinutes(barSpot.x.toInt())}',
                   const TextStyle(
@@ -788,7 +790,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                           color: Colors.white,
                                           borderRadius: BorderRadius.circular(30)
                                         ),
-                                        margin: EdgeInsets.only(right: 20),
+                                        margin: EdgeInsets.only(right: 30),
                                         child: Text("Current: ${lastPrice}",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
@@ -813,8 +815,20 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                     children: [
                                       Expanded(
                                           child: Container(
+                                            margin:
+                                            EdgeInsets.only(top: 10, left: 30),
+                                            child: Text(
+                                              "Last 24 hours".substring(0, 12),
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            ),
+                                          )),
+                                      Expanded(
+                                          child: Container(
                                         margin:
-                                            EdgeInsets.only(top: 10, right: 20),
+                                            EdgeInsets.only(top: 10, right: 30),
                                         child: Text(
                                           "${min}".substring(0, 12),
                                           textAlign: TextAlign.right,
@@ -822,7 +836,8 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                               color: Colors.white,
                                               fontSize: 12),
                                         ),
-                                      ))
+                                      )),
+
                                     ],
                                   ),
                                 ],

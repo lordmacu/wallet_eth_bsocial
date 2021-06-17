@@ -146,8 +146,8 @@ class BalanceWallet extends GetxController {
   }
 
   String convertTimeStampToHumanDateMinutes(int timeStamp) {
-    var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp);
-    return DateFormat('dd/MM/yyyy – kk:mm').format(dateToTimeStamp);
+    var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+    return DateFormat('kk:mm').format(dateToTimeStamp);
   }
 
   Future<String> transferToAnother() async {
