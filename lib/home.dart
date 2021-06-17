@@ -234,8 +234,12 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                 var value = "${barSpot.y}".substring(0, 11);
 
                 print("este es el valor  ${barSpot.x.toInt()}");
+                var timeInHuman=walletController.convertTimeStampToHumanDateMinutes(barSpot.x.toInt());
+                if(range!="1D"){
+                  timeInHuman=walletController.convertTimeStampToHumanDateMinutesComplete(barSpot.x.toInt());
+                }
                 return LineTooltipItem(
-                  '${value} \n ${walletController.convertTimeStampToHumanDateMinutes(barSpot.x.toInt())}',
+                  '${value} \n ${timeInHuman}',
                   const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -384,7 +388,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     });
 
     print("esta es la cantidad ${spotsTemp.length}");
-    spotsTemp.removeRange((spotsTemp.length/2).toInt(), spotsTemp.length);
+  //  spotsTemp.removeRange((spotsTemp.length/2).toInt(), spotsTemp.length);
     print("esta es la cantidad ${spotsTemp.length}");
 
 
