@@ -371,7 +371,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     });
 
     print("esta es la cantidad ${spotsTemp.length}");
-   // spotsTemp.removeRange((spotsTemp.length/3).toInt(), spotsTemp.length);
+    spotsTemp.removeRange((spotsTemp.length/2).toInt(), spotsTemp.length);
     print("esta es la cantidad ${spotsTemp.length}");
 
 
@@ -807,7 +807,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                           EdgeInsets.only(top: 5, bottom: 5),
                                       height: (height * 20) / 100,
                                       padding: EdgeInsets.only(
-                                          left: 30, right: 20, top: 20),
+                                          left: 0, right: 0, top: 20),
                                       width: double.infinity,
                                       child: spots.length>0  ?LineChart(
                                       mainData(),
