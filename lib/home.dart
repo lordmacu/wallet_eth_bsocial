@@ -793,7 +793,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                     ),
                     Positioned(
                         top: 40,
-                        right: 10,
+                        left: 10,
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
