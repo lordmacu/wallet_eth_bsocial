@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_wallet/address.dart';
 import 'package:social_wallet/controllers/BalanceController.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
 import 'package:social_wallet/uiHelpers/animationBackground.dart';
 import 'package:get/get.dart';
@@ -41,6 +42,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   Timer timer;
   Timer timerGraphic;
   Timer timerTransactions;
+  var defaultCurrentTimeZone;
 
   var max;
   var min;
@@ -231,11 +233,11 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
                 print("este es el valor  ${barSpot.x.toInt()}");
                 var timeInHuman = walletController
-                    .convertTimeStampToHumanDateMinutes(barSpot.x.toInt());
+                    .convertTimeStampToHumanDateMinutes(barSpot.x.toInt(),defaultCurrentTimeZone);
                 if (range != "1D") {
                   timeInHuman = walletController
                       .convertTimeStampToHumanDateMinutesComplete(
-                          barSpot.x.toInt());
+                          barSpot.x.toInt(),defaultCurrentTimeZone);
                 }
                 return LineTooltipItem(
                   '${value} \n ${timeInHuman}',
@@ -354,6 +356,9 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   }
 
   Future loadJson() async {
+    final String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+
+    defaultCurrentTimeZone=currentTimeZone;
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var chartRange = "1D";
@@ -447,7 +452,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                     style: TextStyle(color: Color(0xff424f5c), fontSize: 18),
                   ),
                   Text(
-                    "${walletController.convertTimeStampToHumanDate(int.parse(transaction.timeStamp))}",
+                    "${walletController.convertTimeStampToHumanDate(int.parse(transaction.timeStamp),defaultCurrentTimeZone)}",
                     style: TextStyle(color: Color(0xff424f5c), fontSize: 18),
                   )
                 ],
@@ -1471,7 +1476,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                                                             Row(
                                                                           children: [
                                                                             Text(
-                                                                              "${walletController.convertTimeStampToHumanDate(int.parse(transactions[index].timeStamp))}",
+                                                                              "${walletController.convertTimeStampToHumanDate(int.parse(transactions[index].timeStamp),defaultCurrentTimeZone)}",
                                                                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey.withOpacity(0.7)),
                                                                             )
                                                                           ],

@@ -47,6 +47,9 @@ dependencies:
   in_app_update:
   forceupdate:
   fl_chart:
+  flutter_native_timezone:
+  timezone:
+  instant:
 
 
   # The following adds the Cupertino Icons font to your application.

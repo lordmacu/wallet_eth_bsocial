@@ -13,7 +13,10 @@ import 'package:web_socket_channel/io.dart';
 import 'package:http/http.dart' as http;
 import 'package:social_wallet/models/Transaction.dart' as tr;
 import 'package:web3dart/web3dart.dart' as web;
-
+import 'package:instant/instant.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/timezone.dart';
 class BalanceWallet extends GetxController {
   var ethBalance = "0".obs;
   var bsocialBalance = "0".obs;
@@ -26,6 +29,7 @@ class BalanceWallet extends GetxController {
   var totalEarnings = "0".obs;
   var valuePasteWallet = "".obs;
   var step=0.obs;
+  static int _estToUtcDifference;
 
   @override
   onInit() {
@@ -140,17 +144,50 @@ class BalanceWallet extends GetxController {
     this.isloading.value = false;
   }
 
-  String convertTimeStampToHumanDate(int timeStamp) {
+
+  TZDateTime convertFireBaseToLocal(TZDateTime tzDateTime, String locationLocal) {
+    TZDateTime nowLocal = new TZDateTime.now(getLocation(locationLocal));
+    int difference = nowLocal.timeZoneOffset.inHours;
+    TZDateTime newTzDateTime;
+    newTzDateTime = tzDateTime.add(Duration(hours: difference));
+    return newTzDateTime;
+  }
+
+  int _getESTtoUTCDifference(stringlocation) {
+    if (_estToUtcDifference == null) {
+      tz.initializeTimeZones();
+      final locationNY = tz.getLocation(stringlocation);
+      tz.TZDateTime nowNY = tz.TZDateTime.now(locationNY);
+      _estToUtcDifference = nowNY.timeZoneOffset.inHours;
+    }
+
+    return _estToUtcDifference;
+  }
+
+
+
+
+  String convertTimeStampToHumanDate(int timeStamp,defaultCurrentTimeZone) {
+
     var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+
+    dateToTimeStamp.add(Duration(hours: _getESTtoUTCDifference(defaultCurrentTimeZone))); //
+
+
+
     return DateFormat('dd/MM/yyyy').format(dateToTimeStamp);
   }
 
-  String convertTimeStampToHumanDateMinutes(int timeStamp) {
+  String convertTimeStampToHumanDateMinutes(int timeStamp,defaultCurrentTimeZone) {
     var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+    dateToTimeStamp.add(Duration(hours: _getESTtoUTCDifference(defaultCurrentTimeZone))); //
+
     return DateFormat('kk:mm').format(dateToTimeStamp);
   }
-  String convertTimeStampToHumanDateMinutesComplete(int timeStamp) {
+  String convertTimeStampToHumanDateMinutesComplete(int timeStamp,defaultCurrentTimeZone) {
     var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+    dateToTimeStamp.add(Duration(hours: _getESTtoUTCDifference(defaultCurrentTimeZone))); //
+
     return DateFormat('dd/MM/yyyy kk:mm').format(dateToTimeStamp);
   }
 
