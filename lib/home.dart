@@ -381,9 +381,18 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
     data.forEach((final String key, final value) {
 
-      FlSpot spot = FlSpot(double.parse(key), value["v"][0].toDouble());
-       rates.add(value["v"][0].toDouble());
-      spotsTemp.add(spot);
+      var valueCoin=value["v"][0].toDouble();
+      var coinInstring= "${valueCoin}"[0];
+
+      if(coinInstring=="0"){
+        print("coin in string ${coinInstring}");
+
+        FlSpot spot = FlSpot(double.parse(key), value["v"][0].toDouble());
+        rates.add(value["v"][0].toDouble());
+        spotsTemp.add(spot);
+      }
+
+
 
     });
 
@@ -649,7 +658,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                   loadJson();
                 },
                 child: Text(
-                  "24 hours",
+                  "24 Hours",
                   style: TextStyle(
                       fontSize: 17,
                       color: Colors.white),
