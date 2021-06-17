@@ -47,8 +47,8 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   Timer timer;
   Timer timerGraphic;
 
-  double max;
-  double min;
+  var max;
+  var  min;
   List<FlSpot> spots = [];
   List<double> rates = [];
 
@@ -376,10 +376,10 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
 
     setState(() {
-      max = rates.reduce((curr, next) => curr > next ? curr : next);
-      min = rates.reduce((curr, next) => curr < next ? curr : next);
+      max = "${rates.reduce((curr, next) => curr > next ? curr : next)}".substring(0, 10);
+      min = "${rates.reduce((curr, next) => curr < next ? curr : next)}".substring(0, 10);
       spots=spotsTemp;
-      lastPrice="${rates.last}".substring(0, 12);
+      lastPrice="${rates.last}".substring(0, 10);
       print("this is the last ${lastPrice}");
     });
 
@@ -778,13 +778,14 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                     children: [
                                       Container(
                                         margin: EdgeInsets.only(left: 30),
-                                        child: Text("${max}".substring(0, 12),
+                                        child: Text("Max: ${max}",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 12)),
                                       ),
                                       Container(
+
                                         padding: EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
@@ -813,24 +814,29 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                     ) : Container() ),
                                   Row(
                                     children: [
-                                      Expanded(
-                                          child: Container(
-                                            margin:
-                                            EdgeInsets.only(top: 10, left: 30),
-                                            child: Text(
-                                              "Last 24 hours".substring(0, 12),
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12),
-                                            ),
-                                          )),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
+
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(30)
+                                        ),
+                                        margin:
+                                        EdgeInsets.only(top: 10, left: 30),
+                                        child: Text(
+                                          "Last 24 hours".substring(0, 12),
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              color: Color(0xff424f5c),
+                                              fontSize: 12),
+                                        ),
+                                      ),
                                       Expanded(
                                           child: Container(
                                         margin:
                                             EdgeInsets.only(top: 10, right: 30),
                                         child: Text(
-                                          "${min}".substring(0, 12),
+                                          "Min: ${min}",
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
                                               color: Colors.white,
