@@ -1543,7 +1543,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
   @override
   void afterFirstLayout(BuildContext context) {
-    // TODO: implement afterFirstLayout
+
 
     if (GetPlatform.isAndroid) {
       checkForUpdate();
@@ -1551,6 +1551,8 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
       checkVersion();
     }
 
+    loadJson();
+    LoadBalanceWihoutLoading(true);
     timer = Timer.periodic(
         Duration(seconds: 30), (Timer t) => LoadBalanceWihoutLoading(false));
 
@@ -1561,7 +1563,6 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     timerTransactions = Timer.periodic(
         Duration(seconds: 90), (Timer t) => loadTransactionsTimer());
 
-    loadJson();
-    LoadBalanceWihoutLoading(true);
+
   }
 }
