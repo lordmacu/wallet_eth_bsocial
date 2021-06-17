@@ -132,7 +132,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
 
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
 
     controller.close();
   }
