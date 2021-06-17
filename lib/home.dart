@@ -72,6 +72,8 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   }
 
   LoadBalanceWihoutLoading(bool withloading) async {
+    controller.open();
+
     if (withloading) {
       walletController.isloading.value = true;
     }
@@ -123,6 +125,10 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
         "\$${formatter.format(balanceBsocial * double.parse(coin.price))}";
 
     await getTransactions(balanceBsocial, double.parse(coin.price));
+
+    await Future.delayed(Duration(seconds: 1));
+
+    controller.close();
   }
 
   getTransactions(balanceBsocial, priceCoin) async {
