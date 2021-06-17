@@ -51,6 +51,8 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   double min;
   List<FlSpot> spots = [];
   List<double> rates = [];
+
+  var lastPrice;
   bool isShowPopup = false;
 
   PanelController controller;
@@ -336,26 +338,35 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     print("load graphic");
 
     var now =DateTime.now();
-    var end =now.subtract(Duration(hours: 5));
-    var url = Uri.parse('https://http-api.livecoinwatch.com/coins/history/range?coin=BSOCIAL&start=${end.millisecondsSinceEpoch}&end=${now.millisecondsSinceEpoch}&currency=USD');
+    var end =now.subtract(Duration(hours: 24));
+    var stringNow="${now.millisecondsSinceEpoch}".substring(0, 12);;
+    var url = Uri.parse('https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=10102&range=1D');
 
     print(url);
     var response = await http.get(url);
 
     var jsonData = jsonDecode(response.body);
-    var data = jsonData["data"];
+    var data = jsonData["data"]["points"];
 
-    data.forEach((item) {
-      FlSpot spot = FlSpot(item["date"].toDouble(), item["rate"].toDouble());
-      rates.add(item["rate"].toDouble());
+    data.forEach((final String key, final value) {
+
+      FlSpot spot = FlSpot(double.parse(key), value["v"][0].toDouble());
+       rates.add(value["v"][0].toDouble());
       spotsTemp.add(spot);
+
     });
+
+    print("esta es la cantidad ${spotsTemp.length}");
+   // spotsTemp.removeRange((spotsTemp.length/3).toInt(), spotsTemp.length);
+    print("esta es la cantidad ${spotsTemp.length}");
 
 
     setState(() {
       max = rates.reduce((curr, next) => curr > next ? curr : next);
       min = rates.reduce((curr, next) => curr < next ? curr : next);
       spots=spotsTemp;
+      lastPrice="${rates.last}".substring(0, 12);
+      print("this is the last ${lastPrice}");
     });
 
   }
@@ -749,6 +760,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Row(
+
                                     children: [
                                       Container(
                                         margin: EdgeInsets.only(left: 30),
@@ -757,8 +769,23 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 12)),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(30)
+                                        ),
+                                        margin: EdgeInsets.only(right: 20),
+                                        child: Text("Current: ${lastPrice}",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                                color: Color(0xff424f5c),
+                                                fontSize: 13)),
                                       )
                                     ],
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   ),
                                   Container(
                                       margin:
