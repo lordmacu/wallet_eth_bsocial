@@ -349,6 +349,12 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   }
 
   Future loadJson() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var chartRange="1D";
+    if(prefs.getString("chartRange")!=null){
+      chartRange=prefs.getString("chartRange");
+    }
     List<FlSpot> spotsTemp = [];
 
 
@@ -357,7 +363,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     var now =DateTime.now();
     var end =now.subtract(Duration(hours: 24));
     var stringNow="${now.millisecondsSinceEpoch}".substring(0, 12);;
-    var url = Uri.parse('https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=10102&range=1D');
+    var url = Uri.parse('https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=10102&range=${chartRange}');
 
     print(url);
     var response = await http.get(url);
@@ -606,6 +612,94 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
         ]).show();
   }
 
+  showTimePopUp(context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Alert(
+        context: context,
+        style: AlertStyle(
+            descStyle: TextStyle(color: Color(0xff424f5c)),
+            titleStyle: TextStyle(fontSize: 20, color: Color(0xff424f5c))),
+        title: "Select chart range",
+        content: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              child:    RaisedButton(
+                shape: new RoundedRectangleBorder(
+                  borderRadius:
+                  new BorderRadius.circular(
+                      30.0),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+
+                  prefs.setString("chartRange", "1D");
+                  loadJson();
+                },
+                child: Text(
+                  "24 hours",
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white),
+                ),
+                color: Color(0xff424f5c),
+              )
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10),
+                child:    RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                    borderRadius:
+                    new BorderRadius.circular(
+                        30.0),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                    prefs.setString("chartRange", "7D");
+                    loadJson();
+
+                  },
+                  child: Text(
+                    "7 Days",
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.white),
+                  ),
+                  color: Color(0xff424f5c),
+                )
+            ),
+            Container(
+                margin: EdgeInsets.only(top: 10),
+                child:    RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                    borderRadius:
+                    new BorderRadius.circular(
+                        30.0),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                    prefs.setString("chartRange", "1M");
+                    loadJson();
+                  },
+                  child: Text(
+                    "1 month",
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.white),
+                  ),
+                  color: Color(0xff424f5c),
+                )
+            ),
+
+          ],
+        ),
+        buttons: [
+
+        ]).show();
+  }
   buildMenuItem(icon, title, subitle, url) {
     var isLogout = false;
     if (icon == 'assets/logout.png') {
@@ -817,21 +911,26 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                     ) : Container() ),
                                   Row(
                                     children: [
-                                      Container(
-                                        padding: EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
+                                      GestureDetector(
+                                        onTap: (){
+                                          showTimePopUp(context);
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.only(left: 5,right: 5,top: 2,bottom: 2),
 
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(30)
-                                        ),
-                                        margin:
-                                        EdgeInsets.only(top: 10, left: 30),
-                                        child: Text(
-                                          "Last 24 hours".substring(0, 12),
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              color: Color(0xff424f5c),
-                                              fontSize: 12),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(30)
+                                          ),
+                                          margin:
+                                          EdgeInsets.only(top: 10, left: 30),
+                                          child: Text(
+                                            "Last 24 hours".substring(0, 12),
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                color: Color(0xff424f5c),
+                                                fontSize: 12),
+                                          ),
                                         ),
                                       ),
                                       Expanded(

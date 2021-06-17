@@ -18,6 +18,7 @@ import 'package:web3dart/web3dart.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:toast/toast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   Login({Key key, this.title}) : super(key: key);
@@ -38,8 +39,16 @@ class _Login extends State<Login> with TickerProviderStateMixin {
 
   @override
   void initState() {
+
     // TODO: implement initState
     super.initState();
+    initChart();
+  }
+
+  initChart() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("chartRange", "1D");
+
   }
 
   static Future<String> generateWallet(String mnemonic) async {
