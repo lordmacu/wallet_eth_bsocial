@@ -51,6 +51,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   var  min;
   List<FlSpot> spots = [];
   List<double> rates = [];
+  var range="1D";
 
   var lastPrice;
   bool isShowPopup = false;
@@ -355,6 +356,9 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     if(prefs.getString("chartRange")!=null){
       chartRange=prefs.getString("chartRange");
     }
+    setState(() {
+      range=chartRange;
+    });
     List<FlSpot> spotsTemp = [];
 
 
@@ -635,6 +639,9 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                   Navigator.pop(context);
 
                   prefs.setString("chartRange", "1D");
+                  setState(() {
+                    range="1D";
+                  });
                   loadJson();
                 },
                 child: Text(
@@ -656,7 +663,9 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                   ),
                   onPressed: () {
                     Navigator.pop(context);
-
+                    setState(() {
+                      range="7D";
+                    });
                     prefs.setString("chartRange", "7D");
                     loadJson();
 
@@ -670,29 +679,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                   color: Color(0xff424f5c),
                 )
             ),
-            Container(
-                margin: EdgeInsets.only(top: 10),
-                child:    RaisedButton(
-                  shape: new RoundedRectangleBorder(
-                    borderRadius:
-                    new BorderRadius.circular(
-                        30.0),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
 
-                    prefs.setString("chartRange", "1M");
-                    loadJson();
-                  },
-                  child: Text(
-                    "1 month",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white),
-                  ),
-                  color: Color(0xff424f5c),
-                )
-            ),
 
           ],
         ),
@@ -925,7 +912,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                           margin:
                                           EdgeInsets.only(top: 10, left: 30),
                                           child: Text(
-                                            "Last 24 hours".substring(0, 12),
+                                            range=="1D" ? "Last 24 hours" : "Last 7 days",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 color: Color(0xff424f5c),
