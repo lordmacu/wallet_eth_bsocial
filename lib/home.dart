@@ -335,7 +335,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
           break;
         case "AppLifecycleState.resumed":
           loadJson();
-          LoadBalanceWihoutLoading(true);
+          LoadBalanceWihoutLoading(false);
           _lastLifecyleState = AppLifecycleState.resumed;
           break;
 
