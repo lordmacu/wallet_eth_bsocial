@@ -10,7 +10,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_wallet/controllers/WalletController.dart';
 import 'package:social_wallet/finishScreen.dart';
 import 'package:textfield_tags/textfield_tags.dart';
-import 'package:wallet_hd_pro/wallet_hd_pro.dart';
+import 'package:wallet_hd/wallet_hd.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:convert/convert.dart';

@@ -261,13 +261,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
-  ibip39:
-    dependency: transitive
-    description:
-      name: ibip39
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.5"
   image:
     dependency: transitive
     description:
@@ -644,13 +637,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.3"
-  wallet_hd_pro:
+  wallet_hd:
     dependency: "direct main"
     description:
-      name: wallet_hd_pro
+      name: wallet_hd
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.6"
+    version: "0.0.2"
   web3dart:
     dependency: transitive
     description:

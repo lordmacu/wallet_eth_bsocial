@@ -25,6 +25,7 @@ class BalanceWallet extends GetxController {
   var usdValue = "0".obs;
   var totalEarnings = "0".obs;
   var valuePasteWallet = "".obs;
+  var step=0.obs;
 
   @override
   onInit() {

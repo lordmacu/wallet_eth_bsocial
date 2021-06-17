@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_wallet/loading.dart';
-import 'package:wallet_hd_pro/wallet_hd_pro.dart';
+import 'package:wallet_hd/wallet_hd.dart';
 import 'login.dart';
 void main() {
   runApp(MyApp());
