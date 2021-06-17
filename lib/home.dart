@@ -133,8 +133,11 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
 
     await Future.delayed(Duration(seconds: 1));
+    if (withloading) {
+      controller.close();
 
-    controller.close();
+    }
+
   }
 
   getTransactions(balanceBsocial, priceCoin) async {
