@@ -50,6 +50,7 @@ dependencies:
   flutter_native_timezone:
   timezone:
   instant:
+  flutter_tags:
 
 
   # The following adds the Cupertino Icons font to your application.

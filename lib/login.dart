@@ -19,6 +19,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:toast/toast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 
 class Login extends StatefulWidget {
   Login({Key key, this.title}) : super(key: key);
@@ -36,6 +37,8 @@ class _Login extends State<Login> with TickerProviderStateMixin {
   bool isLoading = false;
   List<String> prhases = [];
   String prhasesString = "";
+
+  List tags=[];
 
   @override
   void initState() {
@@ -159,6 +162,7 @@ class _Login extends State<Login> with TickerProviderStateMixin {
 
     });
   }
+  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +177,7 @@ class _Login extends State<Login> with TickerProviderStateMixin {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           minHeight: 0,
-          maxHeight: step == 1 ? 200 : 350,
+          maxHeight: step == 1 ? 400 : 350,
           panel: step == 1
               ? Container(
                   child: Column(
@@ -181,38 +185,58 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                       Container(
                         margin: EdgeInsets.only(top: 20),
                         child: Text(
-                          "Write your secret phrase",
+                          "Write your secret phrase word by word",
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
+
                       Container(
-                        margin: EdgeInsets.only(top: 20, left: 20, right: 20),
-                        child: TextFieldTags(
+                        padding: EdgeInsets.only(top: 30,left: 10,right: 10),
+                        child: Tags(
 
-                          tagsStyler: TagsStyler(
-                              tagTextStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                              tagDecoration: BoxDecoration(
-                                color: Color(0xff424f5c),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              tagCancelIcon: Container(
-                                child: Icon(Icons.cancel,
-                                    size: 18.0, color: Colors.white),
-                                padding: EdgeInsets.only(left: 5),
-                              ),
-                              tagPadding: const EdgeInsets.all(6.0)),
-                          textFieldStyler: TextFieldStyler(
-                              hintText: "Write your phrase word by word",
-                              helperText: null,
-                              isDense: false),
-                          onTag: (tag) {
-                            walletController.tags.add(tag);
+                          key:_tagStateKey,
+                          textField: TagsTextField(
+                            hintText: "Write a word",
+                            textStyle: TextStyle(fontSize: 17),
 
-                          },
-                          onDelete: (tag) {
-                            walletController.tags.remove(tag);
+                            //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
+                            onSubmitted: (String str) {
+
+                              setState(() {
+                                walletController.tags.add(str.trim().toLowerCase());
+                              });
+
+                            },
+                          ),
+                          itemCount: walletController.tags.length, // required
+                          itemBuilder: (int index){
+                            final item = walletController.tags[index];
+
+                            return ItemTags(
+                              // Each ItemTags must contain a Key. Keys allow Flutter to
+                              // uniquely identify widgets.
+                              key: Key(index.toString()),
+                              index: index, // required
+                              title: item,
+
+                              textStyle: TextStyle( fontSize: 16, ),
+                              combine: ItemTagsCombine.withTextBefore,
+                              // OR null,
+                              removeButton: ItemTagsRemoveButton(
+                                onRemoved: (){
+                                  // Remove the item from the data source.
+                                  setState(() {
+                                    // required
+                                    walletController.tags.removeAt(index);
+                                  });
+                                  //required
+                                  return true;
+                                },
+                              ), // OR null,
+                              onPressed: (item) => print(item),
+                              onLongPressed: (item) => print(item),
+                            );
+
                           },
                         ),
                       ),

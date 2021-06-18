@@ -64,11 +64,14 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   Future<void> checkForUpdate() async {
     InAppUpdate.checkForUpdate().then((info) {
 
-      
 
-      if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+      if (info.updateAvailable) {
         InAppUpdate.startFlexibleUpdate().then((_) {}).catchError((e) {});
       }
+/*
+      if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+        InAppUpdate.startFlexibleUpdate().then((_) {}).catchError((e) {});
+      }*/
     }).catchError((e) {});
   }
 
