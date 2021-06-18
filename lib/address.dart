@@ -15,6 +15,7 @@ class AddressPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+
       backgroundColor: Color(0xff424f5c),
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(right: 20, left: 20, bottom: 20),
@@ -41,33 +42,22 @@ class AddressPage extends StatelessWidget {
           ],
         ),
       ),
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Color(0xff424f5c),
+        title: Container(
+           child: Text(
+            "Recieve \$Bsocial",
+            style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           AnimationBackground(),
 
-          Align(
-            child: Container(
-              margin: EdgeInsets.only(top: 50),
-              child: Text(
-                "Recieve \$Bsocial",
-                style: TextStyle(color: Colors.white, fontSize: 30),
-              ),
-            ),
-          alignment: Alignment.topCenter,
-          ),
-          Align(
-            child: GestureDetector(
-              onTap: (){
-                Navigator.pop(context);
 
-              },
-              child: Container(
-                margin: EdgeInsets.only(top: 50,left: 10),
-                child: Icon(Icons.arrow_back_ios_sharp,color: Colors.white,),
-              ),
-            ),
-            alignment: Alignment.topLeft,
-          ),
           Center(
             child: Container(
               margin: EdgeInsets.all(20),

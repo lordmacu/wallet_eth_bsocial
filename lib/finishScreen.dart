@@ -71,12 +71,12 @@ class FinishScreen extends StatelessWidget{
               mainAxisSize: MainAxisSize.max,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 30,bottom: 30),
+                  margin: EdgeInsets.only(top: 20,bottom: 15),
                   child: Text("Your balance is",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w300),),
                 ),
 
                 Container(
-                  margin: EdgeInsets.only(bottom: 30),
+                  margin: EdgeInsets.only(bottom: 15),
 
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

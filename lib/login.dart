@@ -18,6 +18,7 @@ import 'package:web3dart/web3dart.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:toast/toast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   Login({Key key, this.title}) : super(key: key);
@@ -38,8 +39,16 @@ class _Login extends State<Login> with TickerProviderStateMixin {
 
   @override
   void initState() {
+
     // TODO: implement initState
     super.initState();
+    initChart();
+  }
+
+  initChart() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("chartRange", "1D");
+
   }
 
   static Future<String> generateWallet(String mnemonic) async {
@@ -255,27 +264,31 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                       margin: EdgeInsets.only(top: 20),
                       child: Text(
                         "Copy and save your secret phrase",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 17),
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                      height: 200,
+                      padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                       child: prhases.length > 0
-                          ? Wrap(
-                              spacing: 6.0,
-                              runSpacing: 6.0,
-                              children: prhasesString
-                                  .split(' ') // split the text into an array
-                                  .map((String text) => _buildChip(
-                                      text,
-                                      Color(
-                                          0xff424f5c))) // put the text inside a widget
-                                  .toList(),
-                            )
+                          ? SingleChildScrollView(
+                        child: Wrap(
+
+                          spacing: 6.0,
+                          runSpacing: 6.0,
+                          children: prhasesString
+                              .split(' ') // split the text into an array
+                              .map((String text) => _buildChip(
+                              text,
+                              Color(
+                                  0xff424f5c))) // put the text inside a widget
+                              .toList(),
+                        ),
+                      )
                           : Container(),
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 20, right: 20,top: 20),
+                      margin: EdgeInsets.only(left: 20, right: 20,top: 10),
 
                       width: double.infinity,
                       child: OutlineButton(
