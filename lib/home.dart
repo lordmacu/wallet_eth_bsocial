@@ -207,9 +207,9 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
   @override
   void dispose() {
-    timer.cancel();
-    timerGraphic.cancel();
-    timerTransactions.cancel();
+    //timer.cancel();
+    //timerGraphic.cancel();
+   // timerTransactions.cancel();
 
     super.dispose();
   }
@@ -427,6 +427,15 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     // TODO: implement initState
     super.initState();
     controller = PanelController();
+
+    timer = Timer.periodic(
+        Duration(seconds: 30), (Timer t) => LoadBalanceWihoutLoading(false));
+
+    timerGraphic =
+        Timer.periodic(Duration(seconds: 20), (Timer t) => loadJson());
+
+    timerTransactions = Timer.periodic(
+        Duration(seconds: 90), (Timer t) => loadTransactionsTimer());
   }
 
   void launchUrl(_url) async => await canLaunch(_url)
@@ -1026,6 +1035,26 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                             ),
                           ),
                         )),
+                    Positioned(
+                        top: 40,
+                        right: 10,
+                        child: GestureDetector(
+                          onTap: () {
+                            walletController.isloading.value = true;
+
+                            loadJson();
+                            LoadBalanceWihoutLoading(false);
+
+                            handleAppLifecycleState();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Icon(
+                              Icons.refresh,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )),
                     AnimatedOpacity(
                       opacity: isShowPopup ? 1 : 0,
                       duration: Duration(milliseconds: 300),
@@ -1553,15 +1582,9 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
     loadJson();
     LoadBalanceWihoutLoading(true);
-    timer = Timer.periodic(
-        Duration(seconds: 30), (Timer t) => LoadBalanceWihoutLoading(false));
 
     handleAppLifecycleState();
-    timerGraphic =
-        Timer.periodic(Duration(seconds: 20), (Timer t) => loadJson());
 
-    timerTransactions = Timer.periodic(
-        Duration(seconds: 90), (Timer t) => loadTransactionsTimer());
 
 
   }
