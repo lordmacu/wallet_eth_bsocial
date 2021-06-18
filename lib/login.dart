@@ -195,9 +195,15 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                         child: Tags(
 
                           key:_tagStateKey,
+
+
                           textField: TagsTextField(
                             hintText: "Write a word",
                             textStyle: TextStyle(fontSize: 17),
+                            duplicates: false,
+                            lowerCase: true,
+
+
 
                             //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
                             onSubmitted: (String str) {
@@ -213,20 +219,17 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                             final item = walletController.tags[index];
 
                             return ItemTags(
-                              // Each ItemTags must contain a Key. Keys allow Flutter to
-                              // uniquely identify widgets.
+
                               key: Key(index.toString()),
                               index: index, // required
                               title: item,
 
                               textStyle: TextStyle( fontSize: 16, ),
                               combine: ItemTagsCombine.withTextBefore,
-                              // OR null,
-                              removeButton: ItemTagsRemoveButton(
+                               removeButton: ItemTagsRemoveButton(
                                 onRemoved: (){
-                                  // Remove the item from the data source.
-                                  setState(() {
-                                    // required
+                                   setState(() {
+
                                     walletController.tags.removeAt(index);
                                   });
                                   //required
