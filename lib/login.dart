@@ -198,19 +198,29 @@ class _Login extends State<Login> with TickerProviderStateMixin {
 
 
                           textField: TagsTextField(
+
+
+
+
                             hintText: "Write a word",
                             textStyle: TextStyle(fontSize: 17),
                             duplicates: false,
                             lowerCase: true,
+
+                            onChanged: (item){
+
+
+                            },
 
 
 
                             //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
                             onSubmitted: (String str) {
 
-                              setState(() {
-                                walletController.tags.add(str.trim().toLowerCase());
-                              });
+                            setState(() {
+                              walletController.tags.add(str.trim().toLowerCase());
+
+                            });
 
                             },
                           ),
@@ -223,6 +233,9 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                               key: Key(index.toString()),
                               index: index, // required
                               title: item,
+                              pressEnabled: false,
+                               colorShowDuplicate: Colors.redAccent,
+
 
                               textStyle: TextStyle( fontSize: 16, ),
                               combine: ItemTagsCombine.withTextBefore,
