@@ -51,6 +51,7 @@ dependencies:
   timezone:
   instant:
   flutter_tags:
+  decimal:
 
 
   # The following adds the Cupertino Icons font to your application.

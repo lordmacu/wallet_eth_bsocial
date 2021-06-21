@@ -207,10 +207,7 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                             duplicates: false,
                             lowerCase: true,
 
-                            onChanged: (item){
 
-
-                            },
 
 
 
@@ -354,7 +351,7 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                         shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(10.0),
                         ),
-                        onPressed: () {
+                        onPressed: ()  {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (context) => FinishScreen()),

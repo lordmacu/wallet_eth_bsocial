@@ -10,6 +10,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_wallet/address.dart';
 import 'package:social_wallet/controllers/BalanceController.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:decimal/decimal.dart';
 
 import 'package:social_wallet/uiHelpers/animationBackground.dart';
 import 'package:get/get.dart';
@@ -235,7 +236,10 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
             tooltipBgColor: Colors.blueAccent,
             getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
               return touchedBarSpots.map((LineBarSpot barSpot) {
-                var value = "${barSpot.y}".substring(0, 11);
+
+                Decimal pinned = Decimal.parse("${barSpot.y}");
+
+                var value = "${pinned}".substring(0, 11);
 
                 print("este es el valor  ${barSpot.x.toInt()}");
                 var timeInHuman = walletController
@@ -245,6 +249,10 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                       .convertTimeStampToHumanDateMinutesComplete(
                           barSpot.x.toInt(),defaultCurrentTimeZone);
                 }
+
+
+
+
                 return LineTooltipItem(
                   '${value} \n ${timeInHuman}',
                   const TextStyle(
@@ -396,10 +404,9 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     data.forEach((final String key, final value) {
       var valueCoin = value["v"][0].toDouble();
       var coinInstring = "${valueCoin}"[0];
-      if (coinInstring == "0") {
-        tempData.add(
-            {"date": double.parse(key), "price": value["v"][0].toDouble()});
-      }
+
+      tempData.add(
+          {"date": double.parse(key), "price": value["v"][0].toDouble()});
     });
 
     tempData.sort((a, b) {
@@ -416,13 +423,21 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     });
 
     setState(() {
-      max = "${rates.reduce((curr, next) => curr > next ? curr : next)}"
-          .substring(0, 10);
-      min = "${rates.reduce((curr, next) => curr < next ? curr : next)}"
+
+      Decimal convertedNumMax = Decimal.parse("${rates.reduce((curr, next) => curr > next ? curr : next)}");
+
+      max ="${convertedNumMax}".substring(0, 10);
+
+      Decimal convertedNumMin = Decimal.parse("${rates.reduce((curr, next) => curr < next ? curr : next)}");
+
+      min = "${convertedNumMin}"
           .substring(0, 10);
       spots = spotsTemp;
-      lastPrice = "${rates.last}".substring(0, 10);
-      print("this is the last ${lastPrice}");
+
+      Decimal convertedNumCurrent = Decimal.parse("${rates.last}");
+
+      lastPrice = "${convertedNumCurrent}".substring(0, 10);
+
     });
     walletController.isloading.value=false;
 
@@ -1413,7 +1428,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                                 );
                                               },
                                               child: Text(
-                                                "Recieve",
+                                                "Receive",
                                                 style: TextStyle(
                                                     fontSize: 17,
                                                     color: Colors.white),

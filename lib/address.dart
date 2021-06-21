@@ -48,7 +48,7 @@ class AddressPage extends StatelessWidget {
         backgroundColor: Color(0xff424f5c),
         title: Container(
            child: Text(
-            "Recieve \$Bsocial",
+            "Receive \$Bsocial",
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
         ),
