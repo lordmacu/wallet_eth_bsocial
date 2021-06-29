@@ -78,6 +78,11 @@ class _Login extends State<Login> with TickerProviderStateMixin {
     ;
   }
 
+
+  static Future<EthPrivateKey> importKey(String mnemonic) async {
+   return  await WalletHd.ethMnemonicToPrivateKey(mnemonic);
+  }
+
   buildChips() {
     Wrap(
       spacing: 6.0,
@@ -113,14 +118,19 @@ class _Login extends State<Login> with TickerProviderStateMixin {
 
     String mnemonic = WalletHd.createRandomMnemonic();
 
-    var mapAddr = await WalletHd.ethMnemonicToPrivateKey(mnemonic);
+   // var mapAddr = await WalletHd.ethMnemonicToPrivateKey(mnemonic);
+
+    var mapAddr = await compute(importKey, mnemonic);
+
+
+
 
     setState(() {
       prhasesString = mnemonic;
       prhases = mnemonic.split(" ");
     });
 
-    final resultPrivate = await compute(generateKey, mnemonic);
+ //   final resultPrivate = await compute(generateKey, mnemonic);
 
 
 
@@ -145,14 +155,16 @@ class _Login extends State<Login> with TickerProviderStateMixin {
 
     String mnemonic = controllerClassic.text.trim();
 
-    var mapAddr = await WalletHd.ethMnemonicToPrivateKey(mnemonic);
+
+
+    var mapAddr = await compute(importKey, mnemonic);
 
     setState(() {
       prhasesString = mnemonic;
       prhases = mnemonic.split(" ");
     });
 
-    final resultPrivate = await compute(generateKey, mnemonic);
+  //  final resultPrivate = await compute(generateKey, mnemonic);
     final result = await compute(generateWallet, mnemonic);
     walletController.setTokenAndWallet(
         result, prhasesString, HEX.encode(mapAddr.privateKey));

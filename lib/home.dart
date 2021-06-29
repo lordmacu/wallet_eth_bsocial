@@ -1110,7 +1110,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                   buildMenuItem(
                                       "assets/logout.png",
                                       "Logout from wallet",
-                                      "Secure logoout from Bsocial wallet",
+                                      "Secure logout from Bsocial wallet",
                                       "https://banksocial.io/"),
                                   Container(
                                     child: ElevatedButton(
@@ -1309,7 +1309,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                             ],
                                             keyboardType: TextInputType.number,
                                             decoration: new InputDecoration(
-                                              labelText: "Enter ammount",
+                                              labelText: "Enter amount",
                                               fillColor: Colors.white,
                                               border: new OutlineInputBorder(
                                                 borderRadius:
