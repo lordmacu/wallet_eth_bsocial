@@ -421,6 +421,7 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                               ),
                               onPressed: () async {
                                 walletController.tags.value = [];
+                                controllerClassic.text="";
 
                                 createteWallet();
                               },
