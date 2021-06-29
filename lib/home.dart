@@ -874,7 +874,10 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                   Container(
                                     margin:
                                         EdgeInsets.only(top: 10, bottom: 10),
-                                    child: ElevatedButton(
+                                    child: OutlineButton(
+                                      borderSide: BorderSide(color: Colors.white),
+                                      shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
@@ -904,14 +907,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                         ],
                                       ),
                                       onPressed: () {},
-                                      style: ElevatedButton.styleFrom(
-                                        side: BorderSide(
-                                            width: 2.0, color: Colors.white),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                      ),
+
                                     ),
                                   ),
                                 ],
