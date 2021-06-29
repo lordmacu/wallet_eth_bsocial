@@ -387,14 +387,19 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     print("load graphic");
 
     var now = DateTime.now();
-    var end = now.subtract(Duration(hours: 2));
-    var stringNow = "${now.millisecondsSinceEpoch}".substring(0, 12);
-    ;
+    var end = now.subtract(Duration(hours: 3));
+    var stringNow = "${now.millisecondsSinceEpoch}".substring(0, 10);
+    var Sstringend = "${end.millisecondsSinceEpoch}".substring(0, 10);
+
+
+   var url = Uri.parse(
+        'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=10102&range=${chartRange}');
+/*
 
     var url = Uri.parse(
-        'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=10102&range=${chartRange}');
+        'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail/chart?id=10102&range=${Sstringend}~${stringNow}');
 
-    print(url);
+    print(url);*/
     var response = await http.get(url);
 
     var jsonData = jsonDecode(response.body);
@@ -869,7 +874,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                   Container(
                                     margin:
                                         EdgeInsets.only(top: 10, bottom: 10),
-                                    child: OutlinedButton(
+                                    child: ElevatedButton(
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         mainAxisAlignment:
@@ -1122,6 +1127,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                         Icons.close,
                                         color: Color(0xff424f5c),
                                       ),
+
                                       style: ElevatedButton.styleFrom(
                                         primary: Colors.white,
                                         shape: CircleBorder(),
@@ -1163,7 +1169,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                             AnimatedOpacity(
                               opacity: walletController.step.value == 2 ? 0 : 1,
                               duration: Duration(milliseconds: 200),
-                              child: Column(
+                              child: walletController.step.value == 1 ? Column(
                                 children: [
                                   Container(
                                     margin:
@@ -1369,13 +1375,13 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                     ),
                                   )
                                 ],
-                              ),
+                              ) : Container(),
                             ),
                             AnimatedOpacity(
                                 opacity:
                                     walletController.step.value == 1 ? 0 : 1,
                                 duration: Duration(milliseconds: 200),
-                                child: Container(
+                                child:  walletController.step.value == 2 ? Container(
                                   padding: EdgeInsets.only(left: 0, right: 0),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.only(
@@ -1570,7 +1576,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                           : Container()
                                     ],
                                   ),
-                                )),
+                                ) : Container()),
                           ],
                         )),
                   ))

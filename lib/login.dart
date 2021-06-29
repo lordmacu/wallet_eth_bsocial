@@ -102,7 +102,7 @@ class _Login extends State<Login> with TickerProviderStateMixin {
     });
     await Future.delayed(Duration(seconds: 1));
 
-     String mnemonic =WalletHd.createRandomMnemonic();
+    String mnemonic =WalletHd.createRandomMnemonic();
 
 
     var mapAddr = await WalletHd.ethMnemonicToPrivateKey(mnemonic);
@@ -180,216 +180,216 @@ class _Login extends State<Login> with TickerProviderStateMixin {
           maxHeight: step == 1 ? 400 : 350,
           panel: step == 1
               ? Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: Text(
-                          "Write your secret phrase word by word",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Text(
+                    "Write your secret phrase word by word",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
 
-                      Container(
-                        padding: EdgeInsets.only(top: 30,left: 10,right: 10),
-                        child: Tags(
+                Container(
+                  padding: EdgeInsets.only(top: 30,left: 10,right: 10),
+                  child: Tags(
 
-                          key:_tagStateKey,
-
-
-                          textField: TagsTextField(
+                    key:_tagStateKey,
 
 
-
-
-                            hintText: "Write a word",
-                            textStyle: TextStyle(fontSize: 17),
-                            duplicates: false,
-                            lowerCase: true,
+                    textField: TagsTextField(
 
 
 
 
+                      hintText: "Write a word",
+                      textStyle: TextStyle(fontSize: 17),
+                      duplicates: false,
+                      lowerCase: true,
 
-                            //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
-                            onSubmitted: (String str) {
 
+
+
+
+                      //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
+                      onSubmitted: (String str) {
+
+                        setState(() {
+                          walletController.tags.add(str.trim().toLowerCase());
+
+                        });
+
+                      },
+                    ),
+                    itemCount: walletController.tags.length, // required
+                    itemBuilder: (int index){
+                      final item = walletController.tags[index];
+
+                      return ItemTags(
+
+                        key: Key(index.toString()),
+                        index: index, // required
+                        title: item,
+                        pressEnabled: false,
+                        colorShowDuplicate: Colors.redAccent,
+
+
+                        textStyle: TextStyle( fontSize: 16, ),
+                        combine: ItemTagsCombine.withTextBefore,
+                        removeButton: ItemTagsRemoveButton(
+                          onRemoved: (){
                             setState(() {
-                              walletController.tags.add(str.trim().toLowerCase());
 
+                              walletController.tags.removeAt(index);
                             });
-
-                            },
-                          ),
-                          itemCount: walletController.tags.length, // required
-                          itemBuilder: (int index){
-                            final item = walletController.tags[index];
-
-                            return ItemTags(
-
-                              key: Key(index.toString()),
-                              index: index, // required
-                              title: item,
-                              pressEnabled: false,
-                               colorShowDuplicate: Colors.redAccent,
-
-
-                              textStyle: TextStyle( fontSize: 16, ),
-                              combine: ItemTagsCombine.withTextBefore,
-                               removeButton: ItemTagsRemoveButton(
-                                onRemoved: (){
-                                   setState(() {
-
-                                    walletController.tags.removeAt(index);
-                                  });
-                                  //required
-                                  return true;
-                                },
-                              ), // OR null,
-                              onPressed: (item) => print(item),
-                              onLongPressed: (item) => print(item),
-                            );
-
+                            //required
+                            return true;
                           },
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 20, left: 20, right: 20),
-                        width: double.infinity,
-                        child: RaisedButton(
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                          ),
-                          onPressed: () {
-                            //controller.open();
-                            if(walletController.tags.length<12){
-                              Alert(
-                                context: context,
-                                type: AlertType.error,
-                                title: "Review the phrases",
-                                desc: "Please check that the number of phrases is 12 ",
-                                buttons: [
-                                  DialogButton(
+                        ), // OR null,
+                        onPressed: (item) => print(item),
+                        onLongPressed: (item) => print(item),
+                      );
 
-                                    child: Text(
-                                      "Ok",
-                                      style: TextStyle(color: Colors.white, fontSize: 20),
-                                    ),
-                                    onPressed: () => Navigator.pop(context),
-                                    width: 120,
-                                    color: Color(0xff424f5c),
-                                  )
-                                ],
-                              ).show();
-                            }else{
-                              importWallet();
-                            }
-                          },
-                          child: Text(
-                            "Next",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                          color: Color(0xff424f5c),
-                        ),
-                      )
-                    ],
+                    },
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 20, left: 20, right: 20),
+                  width: double.infinity,
+                  child: RaisedButton(
+                    shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(10.0),
+                    ),
+                    onPressed: () {
+                      //controller.open();
+                      if(walletController.tags.length<12){
+                        Alert(
+                          context: context,
+                          type: AlertType.error,
+                          title: "Review the phrases",
+                          desc: "Please check that the number of phrases is 12 ",
+                          buttons: [
+                            DialogButton(
+
+                              child: Text(
+                                "Ok",
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              width: 120,
+                              color: Color(0xff424f5c),
+                            )
+                          ],
+                        ).show();
+                      }else{
+                        importWallet();
+                      }
+                    },
+                    child: Text(
+                      "Next",
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                    color: Color(0xff424f5c),
                   ),
                 )
+              ],
+            ),
+          )
               : Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "Copy and save your secret phrase",
-                        style: TextStyle(fontSize: 17),
-                      ),
-                    ),
-                    Container(
-                      height: 200,
-                      padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-                      child: prhases.length > 0
-                          ? SingleChildScrollView(
-                        child: Wrap(
-
-                          spacing: 6.0,
-                          runSpacing: 6.0,
-                          children: prhasesString
-                              .split(' ') // split the text into an array
-                              .map((String text) => _buildChip(
-                              text,
-                              Color(
-                                  0xff424f5c))) // put the text inside a widget
-                              .toList(),
-                        ),
-                      )
-                          : Container(),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 20, right: 20,top: 10),
-
-                      width: double.infinity,
-                      child: OutlineButton(
-                        child: Text(
-                          "Copy your phrase",
-                          style: TextStyle(
-                              color: Color(0xff424f5c), fontSize: 18),
-                        ),
-                        onPressed: () {
-                          copyPrhases(prhasesString);
-                        },
-                        borderSide: BorderSide(width: 2.0, color: Color(0xff424f5c)),
-                        shape:RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ) ,
-
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 0, left: 20, right: 20),
-                      width: double.infinity,
-                      child: RaisedButton(
-                        shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0),
-                        ),
-                        onPressed: ()  {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => FinishScreen()),
-                                (Route<dynamic> route) => false,
-                          );
-                          ///controller.open();
-                        },
-                        child: Text(
-                          "Next",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        ),
-                        color: Color(0xff424f5c),
-                      ),
-                    )
-                  ],
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: Text(
+                  "Copy and save your secret phrase",
+                  style: TextStyle(fontSize: 17),
                 ),
+              ),
+              Container(
+                height: 200,
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                child: prhases.length > 0
+                    ? SingleChildScrollView(
+                  child: Wrap(
+
+                    spacing: 6.0,
+                    runSpacing: 6.0,
+                    children: prhasesString
+                        .split(' ') // split the text into an array
+                        .map((String text) => _buildChip(
+                        text,
+                        Color(
+                            0xff424f5c))) // put the text inside a widget
+                        .toList(),
+                  ),
+                )
+                    : Container(),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20,top: 10),
+
+                width: double.infinity,
+                child: OutlineButton(
+                  child: Text(
+                    "Copy your phrase",
+                    style: TextStyle(
+                        color: Color(0xff424f5c), fontSize: 18),
+                  ),
+                  onPressed: () {
+                    copyPrhases(prhasesString);
+                  },
+                  borderSide: BorderSide(width: 2.0, color: Color(0xff424f5c)),
+                  shape:RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ) ,
+
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 0, left: 20, right: 20),
+                width: double.infinity,
+                child: RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(10.0),
+                  ),
+                  onPressed: ()  {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => FinishScreen()),
+                          (Route<dynamic> route) => false,
+                    );
+                    ///controller.open();
+                  },
+                  child: Text(
+                    "Next",
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  color: Color(0xff424f5c),
+                ),
+              )
+            ],
+          ),
           body: Stack(
             children: [
               Column(
                 children: [
                   Expanded(
                       child: AnimatedBackground(
-                    behaviour: RandomParticleBehaviour(
-                        options: ParticleOptions(
-                      baseColor: Color(0xff3b4651),
-                      spawnOpacity: 0.0,
-                      opacityChangeRate: 0.25,
-                      minOpacity: 0.1,
-                      maxOpacity: 0.4,
-                      spawnMinSpeed: 30.0,
-                      spawnMaxSpeed: 70.0,
-                      spawnMinRadius: 7.0,
-                      spawnMaxRadius: 30.0,
-                      particleCount: 40,
-                    )),
-                    vsync: this,
-                    child: Text(""),
-                  )),
+                        behaviour: RandomParticleBehaviour(
+                            options: ParticleOptions(
+                              baseColor: Color(0xff3b4651),
+                              spawnOpacity: 0.0,
+                              opacityChangeRate: 0.25,
+                              minOpacity: 0.1,
+                              maxOpacity: 0.4,
+                              spawnMinSpeed: 30.0,
+                              spawnMaxSpeed: 70.0,
+                              spawnMinRadius: 7.0,
+                              spawnMaxRadius: 30.0,
+                              particleCount: 40,
+                            )),
+                        vsync: this,
+                        child: Text(""),
+                      )),
                 ],
               ),
               Center(
@@ -441,7 +441,7 @@ class _Login extends State<Login> with TickerProviderStateMixin {
                               },
                               style: ElevatedButton.styleFrom(
                                 side:
-                                    BorderSide(width: 2.0, color: Colors.white),
+                                BorderSide(width: 2.0, color: Colors.white),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
