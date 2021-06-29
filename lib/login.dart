@@ -108,6 +108,9 @@ class _Login extends State<Login> with TickerProviderStateMixin {
     });
     await Future.delayed(Duration(seconds: 1));
 
+
+
+
     String mnemonic = WalletHd.createRandomMnemonic();
 
     var mapAddr = await WalletHd.ethMnemonicToPrivateKey(mnemonic);
@@ -118,6 +121,9 @@ class _Login extends State<Login> with TickerProviderStateMixin {
     });
 
     final resultPrivate = await compute(generateKey, mnemonic);
+
+
+
     final result = await compute(generateWallet, mnemonic);
     walletController.setTokenAndWallet(
         result, prhasesString, HEX.encode(mapAddr.privateKey));
