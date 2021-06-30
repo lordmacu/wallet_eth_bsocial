@@ -44,7 +44,7 @@ dependencies:
   slide_popup_dialog:
   flutter_boom_menu:
   after_layout:
-  in_app_update:
+  in_app_update: 1.1.15
   forceupdate:
   fl_chart:
   flutter_native_timezone:
