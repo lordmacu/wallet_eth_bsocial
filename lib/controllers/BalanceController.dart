@@ -30,12 +30,14 @@ class BalanceWallet extends GetxController {
   var valuePasteWallet = "".obs;
   var step=2.obs;
   static int _estToUtcDifference;
-
+//mainnet
+  //rinkeby
   String network= "rinkeby";
  // String network= "mainnet";
-
-  String contractGeneral  = "0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC";
-  @override
+  //0xfbf6346247333a1f8b999c72dda7da3568726884
+  //0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC
+  String contractGeneral  = "0xfbf6346247333a1f8b999c72dda7da3568726884";
+   @override
   onInit() {
   LoadBalance();
 
@@ -326,6 +328,7 @@ class BalanceWallet extends GetxController {
         ContractAbi.fromJson(abicode, 'Bsocial'), contractAddr);
 
     final balanceFunction = contract.function('balanceOf');
+    print("is the samee ${balanceFunction}  ");
 
     final client = Web3Client(
         "https://${network}.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
