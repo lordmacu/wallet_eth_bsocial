@@ -50,7 +50,13 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
   List<FlSpot> spots = [];
   List<double> rates = [];
   var range = "1D";
+  String network= "rinkeby";
+  //rinkeby
+  //mainnet
 
+  //0xfbf6346247333a1f8b999c72dda7da3568726884
+  //0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC
+  String contractGeneral  = "0xfbf6346247333a1f8b999c72dda7da3568726884";
   var lastPrice;
   bool isShowPopup = false;
 
@@ -89,7 +95,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     var token = prefs.getString("token");
     var httpClient = new Client();
     var ethClient = new Web3Client(
-        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        "https://${network}.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
         httpClient);
     Credentials fromHex = EthPrivateKey.fromHex(token);
     var addresds = await fromHex.extractAddress();
@@ -100,7 +106,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
         "${balance.getValueInUnit(EtherUnit.ether)}";
 
     final EthereumAddress contractAddr =
-        EthereumAddress.fromHex('0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC');
+        EthereumAddress.fromHex('${contractGeneral}');
 
     var abicode = walletController.getAbi();
     final contract = DeployedContract(
@@ -109,10 +115,10 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
     final balanceFunction = contract.function('balanceOf');
 
     final client = Web3Client(
-        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        "https://${network}.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
         Client(), socketConnector: () {
       return IOWebSocketChannel.connect(
-              "wss://mainnet.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
+              "wss://${network}.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
           .cast<String>();
     });
 

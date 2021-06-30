@@ -1,3 +1,4 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:social_wallet/controllers/Transaction.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:social_wallet/home.dart';
 import 'package:social_wallet/uiHelpers/animationBackground.dart';
 import 'package:loading_animations/loading_animations.dart';
+import 'package:toast/toast.dart';
 import 'controllers/AddressController.dart';
 import 'package:share/share.dart';
 
@@ -92,7 +94,19 @@ class AddressPage extends StatelessWidget {
                      margin: EdgeInsets.only(top: 20),
                      child: Text("Share address",style: TextStyle(fontSize: 24,color: Color(0xff424f5c),fontWeight: FontWeight.bold),),
                    ),
-                 )
+                 ),
+                  GestureDetector(
+                    onTap: (){
+                      FlutterClipboard.copy(addresController.address.value).then((value) {
+                        Toast.show("Your address was copied", context,
+                            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+                      });
+                    },
+                    child:  Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: Text("Copy address",style: TextStyle(fontSize: 24,color: Color(0xff424f5c),fontWeight: FontWeight.bold),),
+                    ),
+                  )
 
 
                 ],
