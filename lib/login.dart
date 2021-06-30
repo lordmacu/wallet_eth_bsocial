@@ -111,16 +111,16 @@ class _Login extends State<Login> with TickerProviderStateMixin {
     setState(() {
       isLoading = true;
     });
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 2));
 
 
 
 
     String mnemonic = WalletHd.createRandomMnemonic();
 
-   // var mapAddr = await WalletHd.ethMnemonicToPrivateKey(mnemonic);
+    var mapAddr = await WalletHd.ethMnemonicToPrivateKey(mnemonic);
 
-    var mapAddr = await compute(importKey, mnemonic);
+   // var mapAddr = await compute(importKey, mnemonic);
 
 
 
@@ -151,13 +151,14 @@ class _Login extends State<Login> with TickerProviderStateMixin {
     setState(() {
       isLoading = true;
     });
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 2));
 
     String mnemonic = controllerClassic.text.trim();
 
 
 
-    var mapAddr = await compute(importKey, mnemonic);
+    //var mapAddr = await compute(importKey, mnemonic);
+    var mapAddr = await WalletHd.ethMnemonicToPrivateKey(mnemonic);
 
     setState(() {
       prhasesString = mnemonic;
