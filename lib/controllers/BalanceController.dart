@@ -53,7 +53,7 @@ class BalanceWallet extends GetxController {
     var request = http.Request(
         'GET',
         Uri.parse(
-            'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=bsocial'));
+            'https://web-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=10102&convert_id=2781'));
     request.bodyFields = {'module': 'account', 'action': 'tokentx'};
     request.headers.addAll(headers);
 
@@ -64,7 +64,8 @@ class BalanceWallet extends GetxController {
 
       var dataJson = jsonDecode(string);
 
-      var data = dataJson["data"]["BSOCIAL"];
+
+      var data = dataJson["data"]["10102"];
       coin = Coin(
           "${data["id"]}",
           data["name"],
@@ -78,7 +79,10 @@ class BalanceWallet extends GetxController {
           "${data["is_active"]}",
           "${data["cmc_rank"]}",
           "${data["is_fiat"]}",
-          "${data["quote"]["USD"]["price"]}");
+          "${data["quote"]["2781"]["price"]}");
+    }else{
+      var string = await response.stream.bytesToString();
+
     }
     return coin;
   }
