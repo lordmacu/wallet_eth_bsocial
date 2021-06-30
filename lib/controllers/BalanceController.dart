@@ -31,6 +31,10 @@ class BalanceWallet extends GetxController {
   var step=2.obs;
   static int _estToUtcDifference;
 
+  String network= "rinkeby";
+ // String network= "mainnet";
+
+  String contractGeneral  = "0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC";
   @override
   onInit() {
   LoadBalance();
@@ -199,17 +203,17 @@ class BalanceWallet extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final client = Web3Client(
-        "https://ropsten.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        "https://${network}.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
         Client(), socketConnector: () {
       return IOWebSocketChannel.connect(
-              "wss://ropsten.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
+              "wss://${network}.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
           .cast<String>();
     });
     var token = prefs.getString("token");
 
     Credentials credentials = EthPrivateKey.fromHex(token);
     final EthereumAddress contractAddr =
-        EthereumAddress.fromHex('0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC');
+        EthereumAddress.fromHex('${contractGeneral}');
 
     var abicode = getAbi();
     final contract = DeployedContract(
@@ -252,7 +256,7 @@ class BalanceWallet extends GetxController {
     var token = prefs.getString("token");
     var httpClient = new Client();
     var ethClient = new Web3Client(
-        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        "https://${network}.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
         httpClient);
     Credentials fromHex = EthPrivateKey.fromHex(token);
     var addresds = await fromHex.extractAddress();
@@ -262,7 +266,7 @@ class BalanceWallet extends GetxController {
     ethBalance.value = "${balance.getValueInUnit(EtherUnit.ether)}";
 
     final EthereumAddress contractAddr =
-    EthereumAddress.fromHex('0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC');
+    EthereumAddress.fromHex('${contractGeneral}');
 
     var abicode = getAbi();
     final contract = DeployedContract(
@@ -271,10 +275,10 @@ class BalanceWallet extends GetxController {
     final balanceFunction = contract.function('balanceOf');
 
     final client = Web3Client(
-        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        "https://${network}.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
         Client(), socketConnector: () {
       return IOWebSocketChannel.connect(
-          "wss://mainnet.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
+          "wss://${network}.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
           .cast<String>();
     });
 
@@ -305,7 +309,7 @@ class BalanceWallet extends GetxController {
     var token = prefs.getString("token");
     var httpClient = new Client();
     var ethClient = new Web3Client(
-        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        "https://${network}.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
         httpClient);
     Credentials fromHex = EthPrivateKey.fromHex(token);
     var addresds = await fromHex.extractAddress();
@@ -315,7 +319,7 @@ class BalanceWallet extends GetxController {
     ethBalance.value = "${balance.getValueInUnit(EtherUnit.ether)}";
 
     final EthereumAddress contractAddr =
-        EthereumAddress.fromHex('0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC');
+        EthereumAddress.fromHex('${contractGeneral}');
 
     var abicode = getAbi();
     final contract = DeployedContract(
@@ -324,10 +328,10 @@ class BalanceWallet extends GetxController {
     final balanceFunction = contract.function('balanceOf');
 
     final client = Web3Client(
-        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        "https://${network}.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
         Client(), socketConnector: () {
       return IOWebSocketChannel.connect(
-              "wss://mainnet.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
+              "wss://${network}.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
           .cast<String>();
     });
 
