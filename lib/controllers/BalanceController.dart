@@ -199,10 +199,10 @@ class BalanceWallet extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final client = Web3Client(
-        "https://mainnet.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
+        "https://ropsten.infura.io/v3/4a2bad1755634c5b9771f76163e9d129",
         Client(), socketConnector: () {
       return IOWebSocketChannel.connect(
-              "wss://mainnet.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
+              "wss://ropsten.infura.io/ws/v3/4a2bad1755634c5b9771f76163e9d129")
           .cast<String>();
     });
     var token = prefs.getString("token");
