@@ -631,7 +631,41 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
         ]).show();
   }
 
-  showPopUp(context) {
+  showPopUpError(context,error) {
+    Alert(
+        context: context,
+        style: AlertStyle(
+            descStyle: TextStyle(color: Color(0xff424f5c)),
+            titleStyle: TextStyle(fontSize: 30, color: Color(0xff424f5c))),
+        title: "An error has occurred",
+        content: Column(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              child: Text(
+                "${error}",
+                style: TextStyle(color: Color(0xff424f5c), fontSize: 18),
+              ),
+            ),
+
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            color: Color(0xff424f5c),
+            onPressed: () {
+
+              Navigator.pop(context);
+            },
+            child: Text(
+              "Ok",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]).show();
+  }
+
+  showPopUp(context,transaction) {
     Alert(
         context: context,
         style: AlertStyle(
@@ -670,7 +704,21 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
             },
             child: Text(
               "Back to wallet",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              textAlign: TextAlign.center,
+
+              style: TextStyle(color: Colors.white, fontSize: 17),
+            ),
+          ),
+          DialogButton(
+            color: Color(0xff424f5c),
+            onPressed: () {
+              launchUrl("https://etherscan.io/tx/${transaction}");
+              Navigator.pop(context);
+            },
+            child: Text(
+              "Go to transaction",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 17),
             ),
           )
         ]).show();
@@ -1351,17 +1399,14 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                                     var transaction =
                                                         await walletController
                                                             .transferToAnother();
-                                                    final formatter =
-                                                        new NumberFormat(
-                                                            "#,###.##");
-                                                    var value = formatter
-                                                        .format(walletController
-                                                            .canTransfer.value);
-                                                    /* Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => TransactionPage(transaction,value,walletController.valuePasteWallet.value)),
-                          );*/
-                                                    showPopUp(context);
+
+
+                                                    if(transaction["result"]=="ok"){
+                                                      showPopUp(context,transaction["transaction"]);
+                                                    }else{
+                                                      showPopUpError(context,transaction);
+                                                    }
+
                                                   }
                                                 : null,
                                             child: Text(
