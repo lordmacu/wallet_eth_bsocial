@@ -56,7 +56,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
 
   //0xfbf6346247333a1f8b999c72dda7da3568726884
   //0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC
-  String contractGeneral  = "0xfbf6346247333a1f8b999c72dda7da3568726884";
+  String contractGeneral  = "0x8Ae812d7903B2E71bB31DB3A2af856F984817680";
   var lastPrice;
   bool isShowPopup = false;
 
