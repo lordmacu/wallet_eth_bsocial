@@ -39,7 +39,7 @@ class BalanceWallet extends GetxController {
   // String network= "mainnet";
   //0xfbf6346247333a1f8b999c72dda7da3568726884
   //0x26a79Bd709A7eF5E5F747B8d8f83326EA044d8cC
-  String contractGeneral = "0xfbf6346247333a1f8b999c72dda7da3568726884";
+  String contractGeneral = "0x8ae812d7903b2e71bb31db3a2af856f984817680";
 
   @override
   onInit() {
@@ -236,12 +236,13 @@ class BalanceWallet extends GetxController {
 
     final EthereumAddress receiver =
         EthereumAddress.fromHex(this.valuePasteWallet.value);
-    var balanceBsocial = (double.parse(
-            "${EtherAmount.fromUnitAndValue(EtherUnit.gwei, BigInt.from(canTransfer.value)).getInWei}") /
-        pow(10, 8));
+
+    var value=(canTransfer.value.toInt()/ 10);
 
     print(
-        "aquiii la transferencia  ${canTransfer.value.toInt()}  ${balanceBsocial} gas ${gasPrice} ---    ${EtherAmount.fromUnitAndValue(EtherUnit.gwei, BigInt.from(canTransfer.value.toInt())).getInWei}");
+        "aquiii la transferencia  ${canTransfer.value.toInt()}  gas ${gasPrice} ---    ${EtherAmount.fromUnitAndValue(EtherUnit.gwei, BigInt.from(value)).getInWei}");
+
+
     var result;
     try {
        result = await client.sendTransaction(
@@ -252,7 +253,7 @@ class BalanceWallet extends GetxController {
             parameters: [
               receiver,
               EtherAmount.fromUnitAndValue(EtherUnit.gwei,
-                      BigInt.from((canTransfer.value.toInt()/ 10) ))
+                      BigInt.from(value ))
                   .getInWei
             ],
           ),
