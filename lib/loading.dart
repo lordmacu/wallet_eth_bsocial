@@ -7,6 +7,7 @@ import 'package:social_wallet/login.dart';
 import 'package:social_wallet/uiHelpers/animationBackground.dart';
 import 'package:loading_animations/loading_animations.dart';
 
+import 'package:social_wallet/finishScreen.dart';
 
 class LoadingPage extends StatefulWidget {
   LoadingPage({Key key, this.title}) : super(key: key);
@@ -27,6 +28,10 @@ class _LoadingPageState extends State<LoadingPage>{
 
     var token =prefs.getString("token");
 
+    var userToken= prefs.getString("password");
+
+
+
       if(token==null){
         Navigator.pushAndRemoveUntil(
           context,
@@ -36,7 +41,7 @@ class _LoadingPageState extends State<LoadingPage>{
       }else {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => FinishScreen()),
               (Route<dynamic> route) => false,
         );
       }
@@ -62,7 +67,10 @@ class _LoadingPageState extends State<LoadingPage>{
         children: [
           AnimationBackground(),
          Center(
-           child: Text("Loading...",style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w300),),
+           child: Container(
+             width: 100,
+             child: Image.asset("assets/icon.png",),
+           ),
          )
 
         ],

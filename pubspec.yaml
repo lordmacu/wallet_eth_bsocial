@@ -52,6 +52,7 @@ dependencies:
   instant:
   flutter_tags:
   decimal:
+  pin_code_text_field:
 
 
 
