@@ -207,7 +207,7 @@ class BalanceWallet extends GetxController {
     return DateFormat('dd/MM/yyyy kk:mm').format(dateToTimeStamp);
   }
 
-  Future<Map> transferToAnother() async {
+  Future<Map> transferToAnother(sendto) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final client = Web3Client(
@@ -226,7 +226,6 @@ class BalanceWallet extends GetxController {
     final EthereumAddress contractAddr =
         EthereumAddress.fromHex('${contractGeneral}');
 
-    print("aquyiii essta el contrato general  ${credentials} ");
 
     var abicode = getAbi();
     final contract = DeployedContract(
@@ -235,12 +234,10 @@ class BalanceWallet extends GetxController {
     final transfer = contract.function('transfer');
 
     final EthereumAddress receiver =
-        EthereumAddress.fromHex(this.valuePasteWallet.value);
+        EthereumAddress.fromHex(sendto);
 
     var value=(canTransfer.value.toInt()/ 10);
 
-    print(
-        "aquiii la transferencia  ${canTransfer.value.toInt()}  gas ${gasPrice} ---    ${EtherAmount.fromUnitAndValue(EtherUnit.gwei, BigInt.from(value)).getInWei}");
 
 
     var result;

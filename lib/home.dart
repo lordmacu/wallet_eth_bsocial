@@ -1398,7 +1398,7 @@ class _Home extends State<Home> with AfterLayoutMixin<Home> {
                                                 ? () async {
                                                     var transaction =
                                                         await walletController
-                                                            .transferToAnother();
+                                                            .transferToAnother(walletControlerText.text);
 
 
                                                     if(transaction["result"]=="ok"){
