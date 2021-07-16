@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:social_wallet/loading.dart';
-import 'package:wallet_hd_pro/wallet_hd_pro.dart';
+ import 'package:wallet_hd_pro/wallet_hd_pro.dart';
 import 'login.dart';
-void main() {
+
+
+void main(List<String> args) async {
+
+
+
   runApp(MyApp());
 }
 
