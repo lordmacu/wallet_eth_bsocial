@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_wallet/controllers/BalanceController.dart';
 import 'package:social_wallet/controllers/PinController.dart';
 import 'package:social_wallet/home.dart';
+import 'package:social_wallet/homebsc.dart';
 import 'package:social_wallet/login.dart';
 import 'package:social_wallet/uiHelpers/animationBackground.dart';
 import 'package:get/get.dart';
@@ -231,7 +232,7 @@ class _FinishScreen extends State<FinishScreen> {
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => Home()),
+                                        builder: (context) => HomeBsc()),
                                     (Route<dynamic> route) => false,
                                   );
                                 } else {
@@ -244,7 +245,7 @@ class _FinishScreen extends State<FinishScreen> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Home()),
+                                      builder: (context) => HomeBsc()),
                                   (Route<dynamic> route) => false,
                                 );
                               } else {

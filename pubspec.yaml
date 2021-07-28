@@ -58,9 +58,7 @@ dependencies:
   encrypt: ^4.0.3
   typed_data: ^1.1.6
   sprintf: ^5.0.0
-  js: ^0.6.2
-  uuid:
-  cryptography: ^2.0.1
+
 
 
 
@@ -97,6 +95,7 @@ flutter:
     - assets/dextoolslogo.png
     - assets/uniswap.png
     - assets/shop.png
+    - assets/query.txt
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
